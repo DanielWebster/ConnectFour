@@ -21,7 +21,7 @@ class ReceiveThread(Thread):
         #self.sock.settimeout(10)
         while not self.shouldstop:
             try:
-                data = self.sock.recv(1024)
+                data = conn.recv(1024)
                 print data
             except timeout:
                 print 'Request timed out!'
@@ -46,8 +46,9 @@ def login():
             s.send("OK")
         elif response == "LOGIN SUCCESSFUL":
             print "Successfully logged in!"
-            friend = "Jake"
-            s.send(friend)
+            #friend = "Jake"
+            #s.send(friend)
+            connectAsServer()
             """ AFTER LOGGED IN SETUP AS SERVER ON DIFFERENT PORT """
         elif response == "INVALID CREDENTIALS":
             tkMessageBox.showerror(title="Error",message="Wrong username/password combination!")
@@ -55,9 +56,9 @@ def login():
             break
         elif "IP" in str(response):
             #print response
-            #connectAsServer()
+            connectAsServer()
             """ INITIATE CONNECTION WITH FRIEND """
-            connectToFriend(response)
+            #connectToFriend(response)
             break
         elif response == "NEW USER":
             s.send(username.get())

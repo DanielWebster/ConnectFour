@@ -15,7 +15,7 @@ s = socket(AF_INET, SOCK_STREAM)
 s.connect((HOST, PORT))
 
 """ Threading method for receiving multiple messages while being able to send simultaneously """
-class ReceiveThread(Thread):
+class ReceiveThreadServer(Thread):
 
     def __init__(self, sock):
         Thread.__init__(self)
@@ -33,11 +33,30 @@ class ReceiveThread(Thread):
 
     def stop(self):
         self.shouldstop = True 
+        
+""" Threading method for receiving multiple messages while being able to send simultaneously """
+class ReceiveThreadClient(Thread):
+
+    def __init__(self, sock):
+        Thread.__init__(self)
+        self.sock = sock
+        self.shouldstop = False
+
+    def run(self):
+        #self.sock.settimeout(10)
+        while not self.shouldstop:
+            try:
+                data = self.sock.recv(1024)
+                print data
+            except timeout:
+                print 'Request timed out!'
+
+    def stop(self):
+        self.shouldstop = True 
 
 def displayFriends():
     for friend in friends:
         print "Friend: " + friend[0]
-        print "IP: " + friend[1]
 
 def login(): 
     while True: 
@@ -54,21 +73,16 @@ def login():
             s.send("OK")
         elif response == "LOGIN SUCCESSFUL":
             print "Successfully logged in!"
+            #connectAsServer()
             #friend = "Dan"
             #s.send(friend)
             response = s.recv(1024)
             global friends
             friends = json.loads(response)
-            #print "Friend: " + friends[0][0]
             displayFriends()
-            """ AFTER LOGGED IN SETUP AS SERVER ON DIFFERENT PORT """
+            break
         elif response == "INVALID CREDENTIALS":
             tkMessageBox.showerror(title="Error",message="Wrong username/password combination!")
-            break
-        elif "IP" in str(response):
-            """ INITIATE CONNECTION WITH FRIEND """
-            #connectToFriend(response)
-            connectAsServer()
             break
         elif response == "NEW USER":
             s.send(username.get())
@@ -79,23 +93,29 @@ def login():
             break
     
     print "I am outside the while loop"
+    friendName = raw_input("Connect to friend: ")
+    #print "friend: " + friend
+    connectAsServer()
+    connectToFriend(friendName)
     
-def connectToFriend(IP):
-    print "IN CONNECT TO FRIEND"
-    friendIP = IP.split("IP:")
-    friendIP = friendIP[1]
-    print "Connect to this IP " + friendIP
+def connectToFriend(friendName):
+    print "Attempting to connect to friend: " + friendName
+    
+    #Get IP from friend name
+    for friend in friends:
+        if friend[0] == friendName:
+            friendIP = friend[1]
+
     HOST = friendIP
     PORT = 9001
     s = socket(AF_INET, SOCK_STREAM)
     s.connect((HOST, PORT))
     
-    r = ReceiveThread(s).start()
+    r = ReceiveThreadClient(s).start()
     
     while True:
-        s.send(raw_input("->"))
-        #response = s.recv(1024)
-        #print response
+        s.send(raw_input("client: "))
+
     
 def connectAsServer():
     print "Connecting as Server..."    
@@ -109,18 +129,18 @@ def connectAsServer():
     global conn
     conn, addr = s.accept() 
     print 'Connected by', addr 
-    r = ReceiveThread(s).start()
+    r = ReceiveThreadServer(s).start()
    
     while True:
-        #response = conn.recv(1024)
-        #print response
-        conn.send(raw_input("->" ))
+        conn.send(raw_input("server: " ))
         
         
     """ BEGIN MESSAGE COMMUNICATION BETWEEN USERS """
     print "after while"
     conn.close()
     print "connection closed"
+    
+    
 def newUser():
     s.send("NEW USER")
     mbutton = Button(mGui, text = 'OK', command = something, fg = 'white', bg = 'green').grid(row = 2, column = 1, sticky = E)

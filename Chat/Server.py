@@ -85,15 +85,6 @@ def attempt_login():
         print "rec_pswd: " + str(received_password) + "\t stored_pswd: " + str(stored_password)
         if str(received_password) == str(stored_password):
             conn.sendall("LOGIN SUCCESSFUL")
-            """    RECEIVE USERNAME TO CHAT TO """
-            #friend = conn.recv(1024)
-            """ GET IP OF FRIEND """
-            #cur.execute("SELECT IP FROM IPs WHERE Username=%s", friend)
-            #IP = cur.fetchone()
-            #IP = IP[0]
-            #print "IP for " + friend + ": " + IP
-            """    SEND IP OF FRIEND """
-            #conn.sendall("IP:" + IP)
             return True
         else:
             conn.sendall("INVALID CREDENTIALS")

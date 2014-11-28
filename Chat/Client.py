@@ -5,33 +5,21 @@ import tkMessageBox
 import sys
 from Tkinter import *
 
+import json
+import os
+
+friends = []
+
 HOST = 'localhost'
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
-s.connect((HOST, PORT)) 
+s.connect((HOST, PORT))
 
-class ReceiveThread(Thread):
-
-    def __init__(self, sock):
-        Thread.__init__(self)
-        self.sock = sock
-        self.shouldstop = False
-
-    def run(self):
-        #self.sock.settimeout(10)
-        while not self.shouldstop:
-            try:
-                data = conn.recv(1024)
-                print data
-            except timeout:
-                print 'Request timed out!'
-                #mySocket.close()
-
-    def stop(self):
-        self.shouldstop = True 
+def displayFriends():
+    for friend in friends:
+        print "Friend: " + friend[0]
 
 def login(): 
-    
     while True: 
         #print "Waiting for response..."
         response = s.recv(1024) 
@@ -46,19 +34,13 @@ def login():
             s.send("OK")
         elif response == "LOGIN SUCCESSFUL":
             print "Successfully logged in!"
-            #friend = "Jake"
-            #s.send(friend)
-            connectAsServer()
-            """ AFTER LOGGED IN SETUP AS SERVER ON DIFFERENT PORT """
+            response = s.recv(1024)
+            global friends
+            friends = json.loads(response)
+            displayFriends()
+            break
         elif response == "INVALID CREDENTIALS":
             tkMessageBox.showerror(title="Error",message="Wrong username/password combination!")
-           # print "Wrong username/password combination!"
-            break
-        elif "IP" in str(response):
-            #print response
-            connectAsServer()
-            """ INITIATE CONNECTION WITH FRIEND """
-            #connectToFriend(response)
             break
         elif response == "NEW USER":
             s.send(username.get())
@@ -68,49 +50,23 @@ def login():
             s.send("LOGIN")
             break
     
-    print "I am outside the while loop"
-    
-def connectToFriend(IP):
-    print "IN CONNECT TO FRIEND"
-    friendIP = IP.split("IP:")
-    friendIP = friendIP[1]
-    print "Connect to this IP " + friendIP
-    HOST = friendIP
-    PORT = 9001
-    s = socket(AF_INET, SOCK_STREAM)
-    s.connect((HOST, PORT))
-    
-    r = ReceiveThread(s).start()
+    os.system("start python ConnectAsServer.py")
     
     while True:
-        s.send(raw_input("->"))
-        #response = s.recv(1024)
-        #print response
+        friendName = raw_input("Connect to friend: ")
+        connectToFriend(friendName)
     
-def connectAsServer():
-    print "Connecting as Server..."    
-    HOST = 'localhost'
-    PORT = 9001
-    s = socket(AF_INET, SOCK_STREAM)
-    s.bind((HOST, PORT)) 
-    s.listen(1) # how many connections it can receive at one time 
-    print "Connected as Server..."
+def connectToFriend(friendName):
+    print "Attempting to connect to friend: " + friendName
     
-    global conn
-    conn, addr = s.accept() 
-    print 'Connected by', addr 
-    r = ReceiveThread(s).start()
-   
-    while True:
-        #response = conn.recv(1024)
-        #print response
-        conn.send(raw_input("->" ))
-        
-        
-    """ BEGIN MESSAGE COMMUNICATION BETWEEN USERS """
-    print "after while"
-    conn.close()
-    print "connection closed"
+    #Get IP from friend name
+    for friend in friends:
+        if friend[0] == friendName:
+            friendIP = friend[1]
+    
+    os.system("start python ConnectToFriend.py " + friendName + " " + friendIP)
+    
+    
 def newUser():
     s.send("NEW USER")
     mbutton = Button(mGui, text = 'OK', command = something, fg = 'white', bg = 'green').grid(row = 2, column = 1, sticky = E)

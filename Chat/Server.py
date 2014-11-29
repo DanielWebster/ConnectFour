@@ -3,6 +3,8 @@ import MySQLdb
 from socket import *
 import json
 
+from Crypto import *
+
 username = ""
 friendsArr = []
 
@@ -112,11 +114,12 @@ while True:
     login = False
     while login == False: 
         #conn.sendall("NOT LOGGED IN")
-        #if conn.recv(1024) == "NEW USER":
-        #    createUser()
-     
-        print "User not logged in..."
-        login = attempt_login()
+        option = conn.recv(1024)
+        if option == "NEW USER":
+            createUser()
+        elif option == "LOGIN":
+            print "User not logged in..."
+            login = attempt_login()
     
     #Update IP for user in DB
     updateIP()

@@ -20,6 +20,7 @@ def displayFriends():
         print "Friend: " + friend[0]
 
 def login(): 
+    s.send("LOGIN")
     while True: 
         #print "Waiting for response..."
         response = s.recv(1024) 
@@ -47,7 +48,6 @@ def login():
         elif response == "NEW PASSWORD":
             s.send(password.get())
         else:
-            s.send("LOGIN")
             break
     
     os.system("start python ConnectAsServer.py")

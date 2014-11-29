@@ -88,7 +88,7 @@ pwlabel = Label(mGui, text='Username: ').grid(row = 0, column = 0, sticky = W)
 unlabel1 = Label(mGui, text='Password: ').grid(row = 1, column = 0, sticky = W)
 
 unEntry = Entry(mGui, textvariable=username).grid(row = 0, column = 1)
-pwEntry = Entry(mGui, textvariable=password).grid(row = 1, column = 1)
+pwEntry = Entry(mGui, textvariable=password, show="*").grid(row = 1, column = 1)
 
 mbutton = Button(mGui, text = 'OK', command = login, fg = 'yellow', bg = 'red').grid(row = 2, column = 1, sticky = E)
 

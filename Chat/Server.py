@@ -49,10 +49,16 @@ def createUser():
     print "NEW PASSWORD: " + new_password
     
     """ ******************* CHECK IF USERNAME ALREADY EXISTS ******************** """
-    
-    """ INSERT NEW USER INTO USERS TABLE """
-    cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)", (new_user, new_password))
-    db.commit()
+    cur.execute("SELECT Username FROM users WHERE Username=%s", new_user)
+    try:
+        stored_username = cur.fetchone()
+        stored_username = stored_username[0]
+        print "Username already exists!"
+    except Exception:
+        """ INSERT NEW USER INTO USERS TABLE """
+        cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)", (new_user, new_password))
+        db.commit()
+        print "User created!"
     
 def attempt_login():
     conn.sendall("CONNECTED")

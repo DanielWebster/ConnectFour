@@ -51,6 +51,7 @@ def login():
             break
     
     os.system("start python ConnectAsServer.py")
+    mGui.destroy()
     
     while True:
         friendName = raw_input("Connect to friend: ")

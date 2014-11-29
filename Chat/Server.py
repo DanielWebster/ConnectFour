@@ -37,7 +37,7 @@ def updateIP():
     print "New IP: " + addr[0]
     cur.execute("UPDATE ips SET ip = %s WHERE username = %s", (addr[0], username))
     db.commit()
-
+#
 def createUser():
     print "Creating new user..."
     conn.sendall("NEW USER")

@@ -7,6 +7,7 @@ from Tkinter import *
 
 import json
 import os
+import subprocess
 
 friends = []
 
@@ -70,12 +71,13 @@ def connectToFriend(friendName):
     
 def newUser():
     s.send("NEW USER")
-    mbutton = Button(mGui, text = 'OK', command = something, fg = 'white', bg = 'green').grid(row = 2, column = 1, sticky = E)
+    proc = subprocess.Popen(['python', 'CreateUser.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    input = proc.communicate()[0]
+    inputs = input.split("||")
     
-def something():
-    s.send(username.get())
-    s.send(password.get()) 
-    mbutton = Button(mGui, text = 'OK', command = login, fg = 'yellow', bg = 'red').grid(row = 2, column = 1, sticky = E)
+    s.send(inputs[0])
+    s.send(inputs[1]) 
+
                
 """ GUI STUFF """
 mGui = Tk()

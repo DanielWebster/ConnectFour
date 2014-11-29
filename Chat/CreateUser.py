@@ -4,12 +4,14 @@ from Tkinter import *
 
 def createUser():
     if password.get() == confirm.get():
-       print username.get()
+        print username.get() + "||" + password.get()
+        newUser.destroy()
         #pass
     else:
         tkMessageBox.showerror('Error', "Password Doesn't Match")
         #print "Error: Password Doesn't Match."
         #print "Please re-enter password."
+
 
 newUser = Tk()
 username = StringVar()

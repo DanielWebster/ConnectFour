@@ -3,9 +3,10 @@ Update Friendlist
 Friendlist Gui
 Chat Gui
 Encrypting Friendlist
+E(PUa, E(PRs, friendlist))
 Encrypting Messages
+E(PUa, IDb || E(PRb, M))
+E(PUb, IDa || E(PRa, M))
 Creating Private Key Public Key (Client Side)
 Sending Public Key to Server
 Storing Public Key/Updating Public Key (Server Side)
-E(PUa, IDb || E(PRb, M))
-E(PUb, IDa || E(PRa, M))

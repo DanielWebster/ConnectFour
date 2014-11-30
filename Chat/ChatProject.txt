@@ -1,0 +1,11 @@
+Add Friend Functionality
+Update Friendlist
+Friendlist Gui
+Chat Gui
+Encrypting Friendlist
+Encrypting Messages
+Creating Private Key Public Key (Client Side)
+Sending Public Key to Server
+Storing Public Key/Updating Public Key (Server Side)
+E(PUa, IDb || E(PRb, M))
+E(PUb, IDa || E(PRa, M))

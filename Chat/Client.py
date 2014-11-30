@@ -11,7 +11,7 @@ import subprocess
 from Crypto.Hash import *
 
 friends = []
-hash = SHA512.new()
+
 
 HOST = 'localhost'
 PORT = 9000
@@ -21,6 +21,10 @@ s.connect((HOST, PORT))
 def displayFriends():
     for friend in friends:
         print "Friend: " + friend[0]
+        
+def addFriend(friend):
+    print "Adding friend: " + friend
+    s.send("ADD FRIEND")
 
 def login(): 
     s.send("LOGIN")
@@ -32,8 +36,9 @@ def login():
         if response == "CONNECTED":
             s.send(username.get())
         elif response == "USERNAME RECEIVED":
-            hash.update(password.get())
-            s.send(hash.digest()) 
+            print "plaintext pw to send: " + password.get()
+            print "hashed pw to send: " + repr(SHA512.new(password.get()).digest())
+            s.send(SHA512.new(password.get()).digest()) 
         elif response == "PASSWORD RECEIVED":
             print "Checking credentials..."
             s.send("OK")
@@ -43,6 +48,11 @@ def login():
             global friends
             friends = json.loads(response)
             displayFriends()
+            os.system("start python ConnectAsServer.py")
+            mGui.destroy()
+            while True:
+                friendName = raw_input("Connect to friend: ")
+                connectToFriend(friendName)
             break
         elif response == "INVALID CREDENTIALS":
             tkMessageBox.showerror(title="Error",message="Wrong username/password combination!")
@@ -50,14 +60,10 @@ def login():
         else:
             break
     
-    os.system("start python ConnectAsServer.py")
-    mGui.destroy()
-    
-    while True:
-        friendName = raw_input("Connect to friend: ")
-        connectToFriend(friendName)
+  
     
 def connectToFriend(friendName):
+    print "Getting friend IP from server..."
     print "Attempting to connect to friend: " + friendName
     
     #Get IP from friend name
@@ -75,9 +81,9 @@ def newUser():
     inputs = input.split("||")
     
     s.send(inputs[0])
-    hash.update(inputs[1])
-    s.send(hash.digest()) 
-
+    print "password plaintext: " + inputs[1]
+    print "password hashed: " + repr(SHA512.new(str(inputs[1]).strip()).digest())
+    s.send(SHA512.new(str(inputs[1]).strip()).digest()) 
 
                
 """ GUI STUFF """

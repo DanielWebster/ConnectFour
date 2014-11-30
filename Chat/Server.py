@@ -2,11 +2,33 @@
 import MySQLdb
 from socket import *
 import json
+from threading import Thread
 
 from Crypto import *
 
 username = ""
 friendsArr = []
+
+
+""" Threading method for receiving multiple commands while being able to do other actions simultaneously """
+class ReceiveThreadServer(Thread):
+
+    def __init__(self, sock):
+        Thread.__init__(self)
+        self.sock = sock
+        self.shouldstop = False
+
+    def run(self):
+        #self.sock.settimeout(10)
+        while not self.shouldstop:
+            try:
+                data = conn.recv(1024)
+                print data
+            except timeout:
+                print 'Request timed out!'
+
+    def stop(self):
+        self.shouldstop = True 
 
 def friendsList():
     #Get complete list of all friends + their IPs for logged in user
@@ -46,7 +68,7 @@ def createUser():
     new_password = conn.recv(1024)
     
     print "NEW USERNAME: " + new_user
-    print "NEW PASSWORD: " + new_password
+    print "NEW PASSWORD: " + repr(new_password)
     
     """ ******************* CHECK IF USERNAME ALREADY EXISTS ******************** """
     cur.execute("SELECT Username FROM users WHERE Username=%s", new_user)
@@ -56,7 +78,7 @@ def createUser():
         print "Username already exists!"
     except Exception:
         """ INSERT NEW USER INTO USERS TABLE """
-        cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)", (new_user, new_password))
+        cur.execute("INSERT INTO users(username, password) VALUES(%s, %s)", (new_user, repr(new_password)))
         db.commit()
         print "User created!"
     
@@ -90,8 +112,8 @@ def attempt_login():
     
     if confirmation == "OK":
         """ CHECK IF VALID USERNAME AND PASSWORD COMBINATION """
-        print "rec_pswd: " + str(received_password) + "\t stored_pswd: " + str(stored_password)
-        if str(received_password) == str(stored_password):
+        print "rec_pswd: " + repr(received_password) + "\t stored_pswd: " + (stored_password)
+        if repr(received_password) == (stored_password):
             conn.sendall("LOGIN SUCCESSFUL")
             return True
         else:
@@ -113,8 +135,11 @@ s.bind((HOST, PORT))
 s.listen(2) # how many connections it can receive at one time 
 
 while True:
+    global conn
     conn, addr = s.accept() 
     print 'Connected by', addr 
+    
+  #  r = ReceiveThreadServer(s).start()
     
     """ While user is NOT logged in"""
     login = False

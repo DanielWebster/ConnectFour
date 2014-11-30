@@ -8,8 +8,10 @@ from Tkinter import *
 import json
 import os
 import subprocess
+from Crypto.Hash import *
 
 friends = []
+hash = SHA512.new()
 
 HOST = 'localhost'
 PORT = 9000
@@ -30,7 +32,8 @@ def login():
         if response == "CONNECTED":
             s.send(username.get())
         elif response == "USERNAME RECEIVED":
-            s.send(password.get()) 
+             hash.update(password.get())
+             s.send(hash.digest()) 
         elif response == "PASSWORD RECEIVED":
             print "Checking credentials..."
             s.send("OK")
@@ -44,10 +47,6 @@ def login():
         elif response == "INVALID CREDENTIALS":
             tkMessageBox.showerror(title="Error",message="Wrong username/password combination!")
             break
-        elif response == "NEW USER":
-            s.send(username.get())
-        elif response == "NEW PASSWORD":
-            s.send(password.get())
         else:
             break
     
@@ -76,7 +75,9 @@ def newUser():
     inputs = input.split("||")
     
     s.send(inputs[0])
-    s.send(inputs[1]) 
+    hash.update(inputs[1])
+    s.send(hash.digest()) 
+
 
                
 """ GUI STUFF """

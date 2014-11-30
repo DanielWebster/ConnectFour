@@ -32,8 +32,8 @@ def login():
         if response == "CONNECTED":
             s.send(username.get())
         elif response == "USERNAME RECEIVED":
-             hash.update(password.get())
-             s.send(hash.digest()) 
+            hash.update(password.get())
+            s.send(hash.digest()) 
         elif response == "PASSWORD RECEIVED":
             print "Checking credentials..."
             s.send("OK")

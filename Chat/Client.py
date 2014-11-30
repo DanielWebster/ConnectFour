@@ -36,8 +36,6 @@ def login():
         if response == "CONNECTED":
             s.send(username.get())
         elif response == "USERNAME RECEIVED":
-            print "plaintext pw to send: " + password.get()
-            print "hashed pw to send: " + repr(SHA512.new(password.get()).digest())
             s.send(SHA512.new(password.get()).digest()) 
         elif response == "PASSWORD RECEIVED":
             print "Checking credentials..."
@@ -81,8 +79,6 @@ def newUser():
     inputs = input.split("||")
     
     s.send(inputs[0])
-    print "password plaintext: " + inputs[1]
-    print "password hashed: " + repr(SHA512.new(str(inputs[1]).strip()).digest())
     s.send(SHA512.new(str(inputs[1]).strip()).digest()) 
 
                

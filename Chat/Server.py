@@ -62,9 +62,8 @@ def updateIP():
 #
 def createUser():
     print "Creating new user..."
-    conn.sendall("NEW USER")
+
     new_user = conn.recv(1024)
-    conn.sendall("NEW PASSWORD")
     new_password = conn.recv(1024)
     
     print "NEW USERNAME: " + new_user
@@ -88,6 +87,7 @@ def attempt_login():
     """FIRST ARGUMENT TO RECEIVE: USERNAME """
     global username 
     username = conn.recv(1024) 
+    print "username: " + username
     
     print "Received ", repr(username) 
     """CANT USE SEND ALL"""
@@ -139,7 +139,7 @@ while True:
     conn, addr = s.accept() 
     print 'Connected by', addr 
     
-  #  r = ReceiveThreadServer(s).start()
+    #r = ReceiveThreadServer(s).start()
     
     """ While user is NOT logged in"""
     login = False

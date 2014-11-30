@@ -22,7 +22,7 @@ class ReceiveThreadServer(Thread):
         self.shouldstop = True 
 
 print "Connecting as Server..."    
-HOST = 'localhost'
+HOST = gethostbyname(gethostname())
 PORT = 9001
 s = socket(AF_INET, SOCK_STREAM)
 s.bind((HOST, PORT)) 

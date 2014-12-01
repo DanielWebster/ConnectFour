@@ -5,6 +5,7 @@ from sys import argv
     
 def selectFriend():
     print listbox.get(listbox.curselection())
+    friendlist.destroy()
     
 friendlist = Tk()
 username = StringVar()
@@ -17,9 +18,10 @@ labelName = Label(friendlist, text="Friend List: ").grid(row = 0, column = 0, st
 listbox = Listbox(friendlist, height = 15)
 listbox.grid(row=0, column=1)
     
-for i in range(len(argv)):
-    if(i > 0):
-        listbox.insert(END, argv[i])
+
+friend = argv[1].split(" ")
+for i in friend:
+    listbox.insert(END, i)
 
 mbutton = Button(friendlist, text = 'Talk', command = selectFriend, fg = 'white', bg = 'blue').grid(row = 3, column = 1, sticky = E)
 

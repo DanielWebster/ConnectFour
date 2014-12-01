@@ -31,9 +31,15 @@ s.connect((HOST, PORT))
 
 
 def displayFriends():
+    friendlist = ''
     for friend in friends:
-        print "Friend: " + friend[0]
-        
+        friendlist += (friend[0] + " ")
+    #print friendlist
+    #return friendlist
+    proc = subprocess.Popen([sys.executable, 'Friendlist.py', friendlist], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    input = proc.communicate()[0]
+    contact = (str(input).strip())
+    return contact
 
 def addFriend():
     proc = subprocess.Popen(['python', 'AddFriend.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -66,14 +72,14 @@ def login():
             response = s.recv(1024)
             global friends
             friends = json.loads(response)
-            displayFriends()
+            
             os.system("start python ConnectAsServer.py")
             mGui.destroy()
-            print "Try to add a friend..."
-            addFriend()
+            #print "Try to add a friend..."
+            #addFriend()
             while True:
-                friendName = raw_input("Connect to friend: ")
-                connectToFriend(friendName)
+                #friendName = raw_input("Connect to friend: ")
+                connectToFriend(displayFriends())
             break
         elif response == "INVALID CREDENTIALS":
             tkMessageBox.showerror(title="Error",message="Wrong username/password combination!")

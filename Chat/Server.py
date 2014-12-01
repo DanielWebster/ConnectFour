@@ -81,7 +81,10 @@ class ReceiveThreadServer(Thread):
                     while login == False: 
                             print "User not logged in..."
                             login = attempt_login()
-                            
+                elif data == "CONNECT TO FRIEND":
+                    friend = conn.recv(1024)
+                    conn.send(getIP(friend))
+                    
                     #Update IP for user in DB
                     updateIP()
                     #Get and send friend list + respective IPs to user
@@ -104,7 +107,7 @@ def friendsList():
     print "Getting friends list for " + username
     cur.execute("SELECT friend FROM friends WHERE username=%s", (username))
     for row in cur.fetchall():
-        friendsArr.append([row[0], getIP(row[0])])
+        friendsArr.append([row[0]])
         
     """ Serializing the list to send over the connection """    
     conn.send(json.dumps(friendsArr))

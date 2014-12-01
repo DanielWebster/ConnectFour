@@ -21,10 +21,6 @@ pubKeyObj = ("-----BEGIN PUBLIC KEY-----\n"
 "-----END PUBLIC KEY-----")
 publicKey = RSA.importKey(pubKeyObj)
 
-# generate a random secret key to be stored for communication with server
-BLOCK_SIZE = 32
-secretkey = os.urandom(BLOCK_SIZE)
-serverCipher = AES.new(secretkey)
 
 friends = []
 
@@ -32,17 +28,6 @@ HOST = 'localhost'
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.connect((HOST, PORT))
-
-def pad(s):
-    return s + ((16-len(s) % 16) * "{")
-
-def encrypt(plaintext, cipher):
-    return cipher.encrypt(pad(plaintext))
-
-def decrypt(ciphertext, cipher):
-    dec = cipher.decrypt(ciphertext).decode("utf-8")
-    l = dec.count("{")
-    return dec[:len(dec)-1]
 
 
 def displayFriends():

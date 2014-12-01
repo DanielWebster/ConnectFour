@@ -1,26 +1,25 @@
-Add Friend Functionality
-Update Friendlist
-Friendlist Gui
+Put Add Friend Functionality to Chat Gui
+Update Friendlist (receives friendname)
 Chat Gui
 Encrypting Friendlist
 E(PUa, E(PRs, friendlist))
 Encrypting Messages
-E(PUa, IDb || E(PRb, M))
-E(PUb, IDa || E(PRa, M))
+E(K_s, IDb || M)
+E(K_s, IDa || M)
 Creating Private Key Public Key (Client Side)
 Sending Public Key to Server
 Storing Public Key/Updating Public Key (Server Side)
 
 
 ClientA:
-generate sessionkeyA (check)
-Send sessionkeyA to Server (encrypted w/ PUs)
+Generate private/public key
+Send public key to Server (encrypted w/ PUs)
 Contact friend: B
-send messages to B (encrypted w/ SESSION key)
+Send messages to B (encrypted w/ SESSION key)
 
 Server: 
 Update clients sessionkeyX as they log in (acting as the privatekey/publickey from before, just symmetric key instead)
-Friend X requesting Friend Y
-generate SESSION key (check)
-Send X: (SESSION key || messageType(flag) || IP of Y) (encrypted w/ sessionkeyX)
-Send Y: (SESSION key || messageType(flag) || IP of X) (encrypted w/ sessionkeyY)
+Friend A requesting Friend B
+Generate SESSION key (check)
+Send A: E(PU_a, E(PR_s, SESSIONKEY || messageType(flag) || IP of B)
+Send B: E(PU_b, E(PR_s, SESSIONKEY || messageType(flag) || IP of A)

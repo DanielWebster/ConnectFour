@@ -14,13 +14,37 @@ class ReceiveThreadClient(Thread):
         while not self.shouldstop:
             try:
                 data = self.sock.recv(1024)
-                print data
+                print "Encrypted Data: " + data
+                data = decrypt(data, sessionCipher)
+                print "Decrypted Data: " + data
             except timeout:
                 print 'Request timed out!'
 
     def stop(self):
         self.shouldstop = True 
         
+
+
+sessionCipher =''
+
+def setSessionKey(secretkey):
+    global sessionCipher
+    sessionCipher = AES.new(secretkey)
+    
+def pad(s):
+    return s + ((16-len(s) % 16) * "{")
+
+def encrypt(plaintext, cipher):
+    return cipher.encrypt(pad(plaintext))
+
+def decrypt(ciphertext, cipher):
+    dec = cipher.decrypt(ciphertext).decode("utf-8")
+    l = dec.count("{")
+    return dec[:len(dec)-1]
+
+secretkey = "1234567890123456"
+setSessionKey(secretkey)
+
 #Expecting 3 arguments: Scriptname, FriendName, IP of friend
 if len(argv) == 3:
     friendName = argv[1]
@@ -42,4 +66,4 @@ s.connect((HOST, PORT))
 r = ReceiveThreadClient(s).start()
 
 while True:
-    s.send(raw_input("client: ")) 
+    s.send(encrypt(raw_input("client: "), sessionCipher)) 

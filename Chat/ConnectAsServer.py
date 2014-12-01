@@ -14,12 +14,35 @@ class ReceiveThreadServer(Thread):
         while not self.shouldstop:
             try:
                 data = conn.recv(1024)
+                print "Encrypted Data: " + data
+                data = decrypt(data, sessionCipher)
+                print "Decrypted Data: " + data
                 print data
             except timeout:
                 print 'Request timed out!'
 
     def stop(self):
         self.shouldstop = True 
+
+sessionCipher =''
+
+def setSessionKey(secretkey):
+    global sessionCipher
+    sessionCipher = AES.new(secretkey)
+    
+def pad(s):
+    return s + ((16-len(s) % 16) * "{")
+
+def encrypt(plaintext, cipher):
+    return cipher.encrypt(pad(plaintext))
+
+def decrypt(ciphertext, cipher):
+    dec = cipher.decrypt(ciphertext).decode("utf-8")
+    l = dec.count("{")
+    return dec[:len(dec)-1]
+
+secretkey = "1234567890123456"
+setSessionKey(secretkey)
 
 print "Connecting as Server..."    
 HOST = gethostbyname(gethostname())
@@ -35,7 +58,7 @@ print 'Connected by', addr
 r = ReceiveThreadServer(s).start()
 
 while True:
-    conn.send(raw_input("server: " ))
+     conn.send(encrypt(raw_input("server: "), sessionCipher))
     
 conn.close()
 print "connection closed"

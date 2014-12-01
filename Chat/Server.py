@@ -67,7 +67,7 @@ class ReceiveThreadServer(Thread):
                 if data == "ADD FRIEND":
                     print "Add a friend!!!"
                     user = conn.recv(1024)
-                    conn.sendall("USER RECEIVED")
+                    conn.send("USER RECEIVED")
                     print "user: " + user
                     friend = conn.recv(1024)
                     print "friend: " + friend
@@ -107,7 +107,7 @@ def friendsList():
         friendsArr.append([row[0], getIP(row[0])])
         
     """ Serializing the list to send over the connection """    
-    conn.sendall(json.dumps(friendsArr))
+    conn.send(json.dumps(friendsArr))
         
 def getIP(user):
     #print "Getting IP for " + user
@@ -157,7 +157,7 @@ def createUser():
         print "User created!"
     
 def attempt_login():
-    conn.sendall("CONNECTED")
+    conn.send("CONNECTED")
     print "Attempting login."
     """FIRST ARGUMENT TO RECEIVE: USERNAME """
     global username 
@@ -166,7 +166,7 @@ def attempt_login():
     
     print "Received ", repr(username) 
     """CANT USE SEND ALL"""
-    conn.sendall("USERNAME RECEIVED")
+    conn.send("USERNAME RECEIVED")
 
     cur.execute("SELECT Password FROM users WHERE Username=%s", username)
     
@@ -181,7 +181,7 @@ def attempt_login():
     """SECOND ARGUMENT TO RECEIVE: PASSWORD """
     received_password = conn.recv(1024) 
     print "Received " + repr(received_password) 
-    conn.sendall("PASSWORD RECEIVED")
+    conn.send("PASSWORD RECEIVED")
     
     confirmation = conn.recv(1024)
     
@@ -189,10 +189,10 @@ def attempt_login():
         """ CHECK IF VALID USERNAME AND PASSWORD COMBINATION """
         print "rec_pswd: " + repr(received_password) + "\t stored_pswd: " + (stored_password)
         if repr(received_password) == (stored_password):
-            conn.sendall("LOGIN SUCCESSFUL")
+            conn.send("LOGIN SUCCESSFUL")
             return True
         else:
-            conn.sendall("INVALID CREDENTIALS")
+            conn.send("INVALID CREDENTIALS")
             print "invalid credentials"
             return False
         
@@ -203,7 +203,7 @@ db = MySQLdb.connect(host="localhost", user="root", passwd="0000", db="chat")
 cur = db.cursor() 
 
 """ SETUP CONNECTION FOR PROCESS """
-HOST = '172.18.44.108' 
+HOST = 'localhost' 
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.bind((HOST, PORT)) 

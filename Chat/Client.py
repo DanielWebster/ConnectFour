@@ -72,7 +72,6 @@ def login():
             response = s.recv(1024)
             global friends
             friends = json.loads(response)
-            
             os.system("start python ConnectAsServer.py")
             mGui.destroy()
             #print "Try to add a friend..."
@@ -93,11 +92,9 @@ def login():
 def connectToFriend(friendName):
     print "Getting friend IP from server..."
     print "Attempting to connect to friend: " + friendName
-    
-    #Get IP from friend name
-    for friend in friends:
-        if friend[0] == friendName:
-            friendIP = friend[1]
+    s.send("CONNECT TO FRIEND")
+    s.send(friendName)
+    friendIP = s.recv(1024)
     
     os.system("start python ConnectToFriend.py " + friendName + " " + friendIP)
     

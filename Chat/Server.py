@@ -38,16 +38,6 @@ def newSessionKey():
     BLOCK_SIZE = 32
     secretKey = os.urandom(BLOCK_SIZE)
 
-def pad(s):
-    return s + ((16-len(s) % 16) * "{")
-
-def encrypt(plaintext, cipher):
-    return cipher.encrypt(pad(plaintext))
-
-def decrypt(ciphertext, cipher):
-    dec = cipher.decrypt(ciphertext).decode("utf-8")
-    l = dec.count("{")
-    return dec[:len(dec)-1]
 
 """ Threading method for receiving multiple commands while being able to do other actions simultaneously """
 class ReceiveThreadServer(Thread):
@@ -85,10 +75,10 @@ class ReceiveThreadServer(Thread):
                     friend = conn.recv(1024)
                     conn.send(getIP(friend))
                     
-                    #Update IP for user in DB
-                    updateIP()
-                    #Get and send friend list + respective IPs to user
-                    friendsList()
+                #Update IP for user in DB
+                updateIP()
+                #Get and send friend list + respective IPs to user
+                friendsList()
                 #print data
             except timeout:
                 print 'Request timed out!'
@@ -106,6 +96,7 @@ def friendsList():
     #Get complete list of all friends + their IPs for logged in user
     print "Getting friends list for " + username
     cur.execute("SELECT friend FROM friends WHERE username=%s", (username))
+    friendsArr = []
     for row in cur.fetchall():
         friendsArr.append([row[0]])
         
@@ -206,11 +197,11 @@ db = MySQLdb.connect(host="localhost", user="root", passwd="0000", db="chat")
 cur = db.cursor() 
 
 """ SETUP CONNECTION FOR PROCESS """
-HOST = 'localhost' 
+HOST = '172.18.44.108' 
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.bind((HOST, PORT)) 
-s.listen(2) # how many connections it can receive at one time 
+s.listen(100) # how many connections it can receive at one time 
 
 while True:
     global conn

@@ -3,11 +3,11 @@ import random
 import sys
 
 int = random.randrange(3,2147483647)
-print int
+#print int
 if int%2 == 0:
     int += 1
 #print sys.maxint
-print int
+#print int
 key = RSA.generate(1024, e=int)
 
 
@@ -17,11 +17,20 @@ binPubKey =  key.publickey().exportKey('PEM')
 privKeyObj = RSA.importKey(binPrivKey)
 pubKeyObj =  RSA.importKey(binPubKey)
 
-msg = "attack at dawn"
-emsg = pubKeyObj.encrypt(msg, 'x')[0]
-dmsg = privKeyObj.decrypt(emsg)
-emsg2 = privKeyObj.decrypt(msg)
-dmsg2 = pubKeyObj.encrypt(emsg2, 'x')[0]
+# msg = "attack at dawn"
+# emsg = pubKeyObj.encrypt(msg, 'x')[0]
+# dmsg = privKeyObj.decrypt(emsg)
+# emsg2 = privKeyObj.decrypt(msg)
+# dmsg2 = pubKeyObj.encrypt(emsg2, 'x')[0]
+
+#public = RSA.importKey(pubKeyObj)
+#msg = str(public)
+#msg2 = "Poison for your body"
+#emsg = public.encrypt(msg, "x")[0]
+#dmsg = private.decrypt(emsg)
+#emsg2 = public.encrypt(msg2, "x")[0]
+
+
 
 #f = open('PrivateKey', 'w')
 #f.write(binPrivKey)
@@ -32,7 +41,7 @@ dmsg2 = pubKeyObj.encrypt(emsg2, 'x')[0]
 #print key
 #print "private key: " + binPrivKey
 print "public key: " + binPubKey
-
+print pubKeyObj
 
 #print msg
 #print emsg

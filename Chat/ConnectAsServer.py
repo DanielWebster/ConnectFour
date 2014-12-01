@@ -18,7 +18,7 @@ class ReceiveThreadServer(Thread):
                 #print "Encrypted Data: " + data
                 data = decrypt(data, sessionCipher)
                 #print "Decrypted Data: " + data
-                print "Jake" + ": " + data
+                print data
             except timeout:
                 print 'Request timed out!'
 
@@ -50,7 +50,7 @@ HOST = gethostbyname(gethostname())
 PORT = 9001
 s = socket(AF_INET, SOCK_STREAM)
 s.bind((HOST, PORT)) 
-s.listen(1) # how many connections it can receive at one time 
+s.listen(10) # how many connections it can receive at one time 
 print "Connected as Server..."
 
 global conn

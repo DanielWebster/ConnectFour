@@ -95,7 +95,6 @@ def connectToFriend(friendName):
     s.send("CONNECT TO FRIEND")
     s.send(friendName)
     friendIP = s.recv(1024)
-    
     os.system("start python ConnectToFriend.py " + friendName + " " + friendIP)
     
     

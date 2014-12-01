@@ -10,3 +10,17 @@ E(PUb, IDa || E(PRa, M))
 Creating Private Key Public Key (Client Side)
 Sending Public Key to Server
 Storing Public Key/Updating Public Key (Server Side)
+
+
+ClientA:
+generate sessionkeyA (check)
+Send sessionkeyA to Server (encrypted w/ PUs)
+Contact friend: B
+send messages to B (encrypted w/ SESSION key)
+
+Server: 
+Update clients sessionkeyX as they log in (acting as the privatekey/publickey from before, just symmetric key instead)
+Friend X requesting Friend Y
+generate SESSION key (check)
+Send X: (SESSION key || messageType(flag) || IP of Y) (encrypted w/ sessionkeyX)
+Send Y: (SESSION key || messageType(flag) || IP of X) (encrypted w/ sessionkeyY)

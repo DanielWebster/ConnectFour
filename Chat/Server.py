@@ -1,14 +1,53 @@
 # import socket
 import MySQLdb
 from socket import *
-import json
 from threading import Thread
-
+import json
+import os
 from Crypto import *
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES
 
+privKeyObj = ("-----BEGIN RSA PRIVATE KEY-----\n" 
+"MIICXQIBAAKBgQDDtsvGHhYiJDAHkHRGvpYZ2FAWUOHTV01DCQgluSNb/09XSL/Q\n" 
+"3snJlDgUDvWvEyaIW9Gj2efIzn6e5CkG5iKn/3ttRlWDGGcY3k2iNXjSvQAYjSpl\n" 
+"t59hHPHCZvPz+0yHs6DVvc+owBxiZAByh1NxK66bzBnEdzU1Sf7aZZ4pMQIDAQAB\n" 
+"AoGAPcoxjawkCsVoEItP2qIDW8eKiXEhywquDvMECnzoJ/x0PTdvr+8WwDi2d8a9\n" 
+"VHf0W2q5xkRexGxFV77rIQ15dQh3kTEquMKKtmfnKfZbnBxPudn0LlENwKGVnOpC\n" 
+"FOkATzH04L4nsjkbxibVuLbniXjmhgHzE3AulIpXr9fN5m0CQQDGQiDjwHlZa+/1\n" 
+"VFhcFjrYddi62VFDwDmJHXGXnp86d+cbhPFAgrjUkFU+ELyhiTKJWDfmFgAASSnU\n" 
+"p79vJv6vAkEA/Lb4aoBtJMbDRkSaCpu8erHwOH0ZFuQrW/oLstO6C84txhjEGQcz\n" 
+"cH1sfuimwh3tg7DVpUsA8DKFqaxZiXROHwJAN3W2N5/XEmG0XX97vD7ntTe6KgKy\n" 
+"ze4O6kFXTl+sETILb1JQHoiy5Zt+jP8nlVSI04zfDjknRO0yi29liNVytwJBALdc\n" 
+"Dqw/mHFpof/XAKmXy85+Uty5r72TOf6XU2uiAchVBZNJHudF+UWyS0ldhrkru8yk\n" 
+"Pq+a1whwr9inS6PW9mMCQQCZSeu14EaTtEpdxPEXstpgQoZyd8ss8NjU+VhO4e0f\n" 
+"3Z69TDxC338kLwY+kvfroX81H9BIGpVYMAeHznlEUaZ7\n" 
+"-----END RSA PRIVATE KEY-----")
+
+privateKey = RSA.importKey(privKeyObj)
 username = ""
 friendsArr = []
 
+secretKey = ''
+
+def newSessionKey():
+    # generate a random secret key
+    # Will be used for individual messages for users
+    # New key per session
+    global secretKey
+    BLOCK_SIZE = 32
+    secretKey = os.urandom(BLOCK_SIZE)
+
+def pad(s):
+    return s + ((16-len(s) % 16) * "{")
+
+def encrypt(plaintext, cipher):
+    return cipher.encrypt(pad(plaintext))
+
+def decrypt(ciphertext, cipher):
+    dec = cipher.decrypt(ciphertext).decode("utf-8")
+    l = dec.count("{")
+    return dec[:len(dec)-1]
 
 """ Threading method for receiving multiple commands while being able to do other actions simultaneously """
 class ReceiveThreadServer(Thread):

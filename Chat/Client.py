@@ -2,21 +2,48 @@ from socket import *
 from threading import Thread
 
 import tkMessageBox
-import sys
 from Tkinter import *
 
+import sys
 import json
 import os
 import subprocess
+
 from Crypto.Hash import *
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES
+
+pubKeyObj = ("-----BEGIN PUBLIC KEY-----\n"
+"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDtsvGHhYiJDAHkHRGvpYZ2FAW\n"
+"UOHTV01DCQgluSNb/09XSL/Q3snJlDgUDvWvEyaIW9Gj2efIzn6e5CkG5iKn/3tt\n"
+"RlWDGGcY3k2iNXjSvQAYjSplt59hHPHCZvPz+0yHs6DVvc+owBxiZAByh1NxK66b\n"
+"zBnEdzU1Sf7aZZ4pMQIDAQAB\n"
+"-----END PUBLIC KEY-----")
+publicKey = RSA.importKey(pubKeyObj)
+
+# generate a random secret key to be stored for communication with server
+BLOCK_SIZE = 32
+secretkey = os.urandom(BLOCK_SIZE)
+serverCipher = AES.new(secretkey)
 
 friends = []
-
 
 HOST = 'localhost'
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.connect((HOST, PORT))
+
+def pad(s):
+    return s + ((16-len(s) % 16) * "{")
+
+def encrypt(plaintext, cipher):
+    return cipher.encrypt(pad(plaintext))
+
+def decrypt(ciphertext, cipher):
+    dec = cipher.decrypt(ciphertext).decode("utf-8")
+    l = dec.count("{")
+    return dec[:len(dec)-1]
+
 
 def displayFriends():
     for friend in friends:

@@ -10,7 +10,7 @@ def selectFriend():
 friendlist = Tk()
 username = StringVar()
 
-#newFriend.geometry('350x100+200+200')
+friendlist.geometry('+200+100')
 friendlist.title("Friend List")
 
 labelName = Label(friendlist, text="Friend List: ").grid(row = 0, column = 0, sticky = NW)

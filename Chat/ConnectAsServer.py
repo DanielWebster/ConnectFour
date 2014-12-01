@@ -1,5 +1,6 @@
 from socket import *
 from threading import Thread
+from Crypto.Cipher import AES
 
 """ Threading method for receiving multiple messages while being able to send simultaneously """
 class ReceiveThreadServer(Thread):
@@ -14,10 +15,10 @@ class ReceiveThreadServer(Thread):
         while not self.shouldstop:
             try:
                 data = conn.recv(1024)
-                print "Encrypted Data: " + data
+                #print "Encrypted Data: " + data
                 data = decrypt(data, sessionCipher)
-                print "Decrypted Data: " + data
-                print data
+                #print "Decrypted Data: " + data
+                print "Jake" + ": " + data
             except timeout:
                 print 'Request timed out!'
 
@@ -39,7 +40,7 @@ def encrypt(plaintext, cipher):
 def decrypt(ciphertext, cipher):
     dec = cipher.decrypt(ciphertext).decode("utf-8")
     l = dec.count("{")
-    return dec[:len(dec)-1]
+    return dec[:len(dec)-l]
 
 secretkey = "1234567890123456"
 setSessionKey(secretkey)
@@ -58,7 +59,7 @@ print 'Connected by', addr
 r = ReceiveThreadServer(s).start()
 
 while True:
-     conn.send(encrypt(raw_input("server: "), sessionCipher))
+     conn.send(encrypt(raw_input(), sessionCipher))
     
 conn.close()
 print "connection closed"

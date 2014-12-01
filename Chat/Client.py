@@ -11,7 +11,7 @@ import subprocess
 
 from Crypto.Hash import *
 from Crypto.PublicKey import RSA
-from Crypto.Cipher import AES
+
 
 pubKeyObj = ("-----BEGIN PUBLIC KEY-----\n"
 "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDtsvGHhYiJDAHkHRGvpYZ2FAW\n"
@@ -24,7 +24,7 @@ publicKey = RSA.importKey(pubKeyObj)
 
 friends = []
 
-HOST = 'localhost'
+HOST = '172.18.44.108'
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.connect((HOST, PORT))

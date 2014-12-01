@@ -23,12 +23,42 @@ class ReceiveThreadServer(Thread):
         while not self.shouldstop:
             try:
                 data = conn.recv(1024)
-                print data
+                #print "data: " + data
+                
+                if data == "ADD FRIEND":
+                    print "Add a friend!!!"
+                    user = conn.recv(1024)
+                    conn.sendall("USER RECEIVED")
+                    print "user: " + user
+                    friend = conn.recv(1024)
+                    print "friend: " + friend
+                    addFriend(user, friend)
+                    
+                elif data == "NEW USER":
+                    createUser()
+                elif data == "LOGIN":
+                    """ While user is NOT logged in"""
+                    login = False
+                    while login == False: 
+                            print "User not logged in..."
+                            login = attempt_login()
+                            
+                    #Update IP for user in DB
+                    updateIP()
+                    #Get and send friend list + respective IPs to user
+                    friendsList()
+                #print data
             except timeout:
                 print 'Request timed out!'
 
     def stop(self):
         self.shouldstop = True 
+
+
+def addFriend(user, friend):
+    print "Adding friend \'" + friend + "\' to user \'" + user + "\'"
+    cur.execute("INSERT INTO friends(username, friend) VALUES (%s, %s)", (user, friend))
+    db.commit()
 
 def friendsList():
     #Get complete list of all friends + their IPs for logged in user
@@ -57,8 +87,14 @@ def getIP(user):
 def updateIP():
     print "Updating IP for user: " + username
     print "New IP: " + addr[0]
-    cur.execute("UPDATE ips SET ip = %s WHERE username = %s", (addr[0], username))
-    db.commit()
+    try:
+        cur.execute("INSERT INTO ips(username, IP) VALUES(%s,%s)", (username, addr[0]))
+        db.commit()
+    except Exception:
+        cur.execute("UPDATE ips SET ip = %s WHERE username = %s", (addr[0], username))
+        db.commit()
+        
+    print "IP updated..."
 #
 def createUser():
     print "Creating new user..."
@@ -139,22 +175,8 @@ while True:
     conn, addr = s.accept() 
     print 'Connected by', addr 
     
-    #r = ReceiveThreadServer(s).start()
+    r = ReceiveThreadServer(s).start()
     
-    """ While user is NOT logged in"""
-    login = False
-    while login == False: 
-        #conn.sendall("NOT LOGGED IN")
-        option = conn.recv(1024)
-        if option == "NEW USER":
-            createUser()
-        elif option == "LOGIN":
-            print "User not logged in..."
-            login = attempt_login()
-    
-    #Update IP for user in DB
-    updateIP()
-    #Get and send friend list + respective IPs to user
-    friendsList()
+
 
 conn.close()

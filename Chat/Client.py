@@ -22,9 +22,18 @@ def displayFriends():
     for friend in friends:
         print "Friend: " + friend[0]
         
-def addFriend(friend):
+
+def addFriend():
+    proc = subprocess.Popen(['python', 'AddFriend.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    input = proc.communicate()[0]
+    friend=(str(input).strip())
+    
     print "Adding friend: " + friend
+    print "To User: " + username.get()
     s.send("ADD FRIEND")
+    s.send(username.get())
+    if s.recv(1024) == "USER RECEIVED":
+        s.send(friend)
 
 def login(): 
     s.send("LOGIN")
@@ -48,6 +57,8 @@ def login():
             displayFriends()
             os.system("start python ConnectAsServer.py")
             mGui.destroy()
+            print "Try to add a friend..."
+            addFriend()
             while True:
                 friendName = raw_input("Connect to friend: ")
                 connectToFriend(friendName)
@@ -57,8 +68,9 @@ def login():
             break
         else:
             break
-    
-  
+        
+        
+
     
 def connectToFriend(friendName):
     print "Getting friend IP from server..."

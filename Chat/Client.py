@@ -21,10 +21,12 @@ pubKeyObj = ("-----BEGIN PUBLIC KEY-----\n"
 "-----END PUBLIC KEY-----")
 publicKey = RSA.importKey(pubKeyObj)
 
+sessionKey = ''
+
 
 friends = []
 
-HOST = '172.18.44.108'
+HOST = 'localhost'
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.connect((HOST, PORT))
@@ -69,11 +71,18 @@ def login():
             s.send("OK")
         elif response == "LOGIN SUCCESSFUL":
             print "Successfully logged in!"
+            s.send("UPDATE IP")
+            s.send("FRIENDS LIST")
             response = s.recv(1024)
             global friends
             friends = json.loads(response)
             os.system("start python ConnectAsServer.py")
             mGui.destroy()
+            newSessionKey()
+            #Before communication channel is open, send the secret key
+            s.send("SESSION KEY")
+            global sessionKey
+            s.send(sessionKey)
             #print "Try to add a friend..."
             #addFriend()
             while True:
@@ -84,10 +93,17 @@ def login():
             tkMessageBox.showerror(title="Error",message="Wrong username/password combination!")
             break
         else:
-            break
-        
-        
+            break 
 
+
+def newSessionKey():
+    global sessionKey
+    # generate a random secret key
+    # Will be used for individual messages for users
+    # New key per session
+    BLOCK_SIZE = 32
+    sessionKey = os.urandom(BLOCK_SIZE)
+    
     
 def connectToFriend(friendName):
     print "Getting friend IP from server..."
@@ -95,6 +111,8 @@ def connectToFriend(friendName):
     s.send("CONNECT TO FRIEND")
     s.send(friendName)
     friendIP = s.recv(1024)
+    messageSessionKey = s.recv(1024)
+    print "MessageSessionKey: " + messageSessionKey
     os.system("start python ConnectToFriend.py " + friendName + " " + friendIP)
     
     

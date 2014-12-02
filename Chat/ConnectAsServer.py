@@ -59,7 +59,7 @@ print 'Connected by', addr
 r = ReceiveThreadServer(s).start()
 
 while True:
-     conn.send(encrypt(raw_input(), sessionCipher))
+    conn.send(encrypt(raw_input(), sessionCipher))
     
 conn.close()
 print "connection closed"

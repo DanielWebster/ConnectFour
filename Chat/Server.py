@@ -28,15 +28,15 @@ privateKey = RSA.importKey(privKeyObj)
 username = ""
 friendsArr = []
 
-secretKey = ''
+messageSessionKey = ''
 
 def newSessionKey():
     # generate a random secret key
     # Will be used for individual messages for users
     # New key per session
-    global secretKey
+    global messageSessionKey
     BLOCK_SIZE = 32
-    secretKey = os.urandom(BLOCK_SIZE)
+    messageSessionKey = os.urandom(BLOCK_SIZE)
 
 
 """ Threading method for receiving multiple commands while being able to do other actions simultaneously """
@@ -62,7 +62,6 @@ class ReceiveThreadServer(Thread):
                     friend = conn.recv(1024)
                     print "friend: " + friend
                     addFriend(user, friend)
-                    
                 elif data == "NEW USER":
                     createUser()
                 elif data == "LOGIN":
@@ -74,11 +73,19 @@ class ReceiveThreadServer(Thread):
                 elif data == "CONNECT TO FRIEND":
                     friend = conn.recv(1024)
                     conn.send(getIP(friend))
-                    
-                #Update IP for user in DB
-                updateIP()
-                #Get and send friend list + respective IPs to user
-                friendsList()
+                    newSessionKey()
+                    print "messageSessionKey: " + messageSessionKey
+                    conn.send(messageSessionKey)
+                elif data == "SESSION KEY":
+                    sessionKey = conn.recv(1024)
+                    #print "SESSION key: " + sessionKey
+                    updateSessionKey(sessionKey)
+                elif data == "FRIENDS LIST":
+                    #Get and send friend list + respective IPs to user
+                    friendsList()
+                elif data == "UPDATE IP":
+                    #Update IP for user in DB
+                    updateIP()
                 #print data
             except timeout:
                 print 'Request timed out!'
@@ -86,6 +93,17 @@ class ReceiveThreadServer(Thread):
     def stop(self):
         self.shouldstop = True 
 
+def updateSessionKey(sessionKey):
+    print "Updating sessionKey for user: " + username
+    print "New SessionKey: " + sessionKey
+    try:
+        cur.execute("UPDATE users SET PublicKey = %s WHERE username = %s", (sessionKey, username))
+        db.commit()
+    except Exception:
+        print "Username does not exist!"
+        
+        
+    print "SessionKey updated..."
 
 def addFriend(user, friend):
     print "Adding friend \'" + friend + "\' to user \'" + user + "\'"
@@ -158,7 +176,7 @@ def attempt_login():
     username = conn.recv(1024) 
     print "username: " + username
     
-    print "Received ", repr(username) 
+    #print "Received ", repr(username) 
     """CANT USE SEND ALL"""
     conn.send("USERNAME RECEIVED")
 
@@ -174,14 +192,14 @@ def attempt_login():
    
     """SECOND ARGUMENT TO RECEIVE: PASSWORD """
     received_password = conn.recv(1024) 
-    print "Received " + repr(received_password) 
+    #print "Received " + repr(received_password) 
     conn.send("PASSWORD RECEIVED")
     
     confirmation = conn.recv(1024)
     
     if confirmation == "OK":
         """ CHECK IF VALID USERNAME AND PASSWORD COMBINATION """
-        print "rec_pswd: " + repr(received_password) + "\t stored_pswd: " + (stored_password)
+        #print "rec_pswd: " + repr(received_password) + "\t stored_pswd: " + (stored_password)
         if repr(received_password) == (stored_password):
             conn.send("LOGIN SUCCESSFUL")
             return True
@@ -197,7 +215,7 @@ db = MySQLdb.connect(host="localhost", user="root", passwd="0000", db="chat")
 cur = db.cursor() 
 
 """ SETUP CONNECTION FOR PROCESS """
-HOST = '172.18.44.108' 
+HOST = 'localhost' 
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.bind((HOST, PORT)) 

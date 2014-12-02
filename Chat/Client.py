@@ -28,7 +28,7 @@ sessionKey = ''
 
 friends = []
 
-HOST = 'localhost'
+HOST = '172.18.44.108'
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.connect((HOST, PORT))
@@ -103,7 +103,7 @@ def newSessionKey():
     # generate a random secret key
     # Will be used for individual messages for users
     # New key per session
-    sessionKey = str(uuid.uuid4())
+    sessionKey = str(uuid.uuid4().hex)
     
     
 def connectToFriend(friendName):
@@ -112,7 +112,9 @@ def connectToFriend(friendName):
     s.send("CONNECT TO FRIEND")
     s.send(friendName)
     friendIP = s.recv(1024)
+    s.send("OK")
     messageSessionKey = s.recv(1024)
+    s.send("OK")
     friendKey = s.recv(1024)
     print "MessageSessionKey: " + messageSessionKey
     print "FriendKey: " + friendKey

@@ -103,7 +103,7 @@ def newSessionKey():
     # generate a random secret key
     # Will be used for individual messages for users
     # New key per session
-    sessionKey = str(uuid.uuid4())
+    sessionKey = str(uuid.uuid4().hex)
     
     
 def connectToFriend(friendName):

@@ -21,7 +21,7 @@ pubKeyObj = ("-----BEGIN PUBLIC KEY-----\n"
 "RlWDGGcY3k2iNXjSvQAYjSplt59hHPHCZvPz+0yHs6DVvc+owBxiZAByh1NxK66b\n"
 "zBnEdzU1Sf7aZZ4pMQIDAQAB\n"
 "-----END PUBLIC KEY-----")
-publicKey = RSA.importKey(pubKeyObj)
+serverKey = RSA.importKey(pubKeyObj)
 
 sessionKey = ''
 
@@ -84,7 +84,8 @@ def login():
             #Before communication channel is open, send the secret key
             s.send("SESSION KEY")
             global sessionKey
-            s.send(sessionKey)
+            #sessionKey = "1234123412341234" *2
+            s.send(serverKey.encrypt(sessionKey, 'x')[0])
             #print "Try to add a friend..."
             #addFriend()
             while True:

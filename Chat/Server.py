@@ -82,6 +82,8 @@ class ReceiveThreadServer(Thread):
                         conn.send(messageSessionKey)
                 elif data == "SESSION KEY":
                     sessionKey = conn.recv(1024)
+                    #print "Encrypted Key: " + sessionKey
+                    sessionKey = privateKey.decrypt(sessionKey)
                     #print "SESSION key: " + sessionKey
                     updateSessionKey(sessionKey)
                 elif data == "FRIENDS LIST":

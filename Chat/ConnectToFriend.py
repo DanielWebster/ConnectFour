@@ -74,4 +74,4 @@ s.send("KEY")
 s.send(friendKey)
 
 while True:
-    s.send(encrypt(raw_input(), sessionCipher)) 
+    s.send(encrypt(raw_input(), sessionCipher))

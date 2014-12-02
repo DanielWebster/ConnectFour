@@ -37,7 +37,7 @@ def newSessionKey():
     # generate a random secret key
     # Will be used for individual messages for users
     # New key per session
-    messageSessionKey = str(uuid.uuid4())
+    messageSessionKey = str(uuid.uuid4().hex)
 
 
 """ Threading method for receiving multiple commands while being able to do other actions simultaneously """
@@ -74,10 +74,12 @@ class ReceiveThreadServer(Thread):
                 elif data == "CONNECT TO FRIEND":
                     friend = conn.recv(1024)
                     conn.send(getIP(friend))
-                    newSessionKey()
-                    print "messageSessionKey: " + messageSessionKey
-                    conn.send(messageSessionKey)
-                    conn.send(messageSessionKey)
+                    if conn.recv(1024) == "OK":
+                        newSessionKey()
+                        print "messageSessionKey: " + messageSessionKey
+                        conn.send(messageSessionKey)
+                    if conn.recv(1024) == "OK":
+                        conn.send(messageSessionKey)
                 elif data == "SESSION KEY":
                     sessionKey = conn.recv(1024)
                     #print "SESSION key: " + sessionKey
@@ -217,7 +219,7 @@ db = MySQLdb.connect(host="localhost", user="root", passwd="0000", db="chat")
 cur = db.cursor() 
 
 """ SETUP CONNECTION FOR PROCESS """
-HOST = 'localhost' 
+HOST = '172.18.44.108' 
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.bind((HOST, PORT)) 

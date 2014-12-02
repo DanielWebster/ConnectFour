@@ -47,16 +47,19 @@ def decrypt(ciphertext, cipher):
 secretkey = "1234567890123456"
 setSessionKey(secretkey)
 
-#Expecting 3 arguments: Scriptname, FriendName, IP of friend
-if len(argv) == 3:
+#Expecting 5 arguments: Scriptname, FriendName, IP of friend, session key, encrypted session key for friend
+if len(argv) == 5:
     friendName = argv[1]
     friendIP = argv[2]
+    myKey = argv[3]
+    friendKey = argv[4]
 else:
     print "Invalid number of arguments!"
 
 print "friendName: " + friendName
 print "friendIP: " + friendIP
-
+print "myKey: " + myKey
+print "friendKey: " + friendKey
 
 print "Attempting to connect to friend: " + friendName
 

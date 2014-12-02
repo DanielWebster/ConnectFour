@@ -76,6 +76,7 @@ class ReceiveThreadServer(Thread):
                     newSessionKey()
                     print "messageSessionKey: " + messageSessionKey
                     conn.send(messageSessionKey)
+                    conn.send(messageSessionKey)
                 elif data == "SESSION KEY":
                     sessionKey = conn.recv(1024)
                     #print "SESSION key: " + sessionKey
@@ -95,7 +96,7 @@ class ReceiveThreadServer(Thread):
 
 def updateSessionKey(sessionKey):
     print "Updating sessionKey for user: " + username
-    print "New SessionKey: " + sessionKey
+    print "New User SessionKey: " + sessionKey
     try:
         cur.execute("UPDATE users SET PublicKey = %s WHERE username = %s", (sessionKey, username))
         db.commit()

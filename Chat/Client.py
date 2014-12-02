@@ -112,8 +112,10 @@ def connectToFriend(friendName):
     s.send(friendName)
     friendIP = s.recv(1024)
     messageSessionKey = s.recv(1024)
+    friendKey = s.recv(1024)
     print "MessageSessionKey: " + messageSessionKey
-    os.system("start python ConnectToFriend.py " + friendName + " " + friendIP)
+    print "FriendKey: " + friendKey
+    os.system("start python ConnectToFriend.py " + friendName + " " + friendIP + " " + str(messageSessionKey) + " " + str(friendKey))
     
     
 def newUser():

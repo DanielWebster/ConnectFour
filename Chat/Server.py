@@ -8,6 +8,8 @@ from Crypto import *
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import AES
 
+import uuid
+
 privKeyObj = ("-----BEGIN RSA PRIVATE KEY-----\n" 
 "MIICXQIBAAKBgQDDtsvGHhYiJDAHkHRGvpYZ2FAWUOHTV01DCQgluSNb/09XSL/Q\n" 
 "3snJlDgUDvWvEyaIW9Gj2efIzn6e5CkG5iKn/3ttRlWDGGcY3k2iNXjSvQAYjSpl\n" 
@@ -31,12 +33,11 @@ friendsArr = []
 messageSessionKey = ''
 
 def newSessionKey():
+    global messageSessionKey
     # generate a random secret key
     # Will be used for individual messages for users
     # New key per session
-    global messageSessionKey
-    BLOCK_SIZE = 32
-    messageSessionKey = os.urandom(BLOCK_SIZE)
+    messageSessionKey = str(uuid.uuid4())
 
 
 """ Threading method for receiving multiple commands while being able to do other actions simultaneously """

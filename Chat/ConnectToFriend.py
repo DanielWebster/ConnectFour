@@ -44,8 +44,7 @@ def decrypt(ciphertext, cipher):
     l = dec.count("{")
     return dec[:len(dec)-l]
 
-secretkey = "1234567890123456"
-setSessionKey(secretkey)
+
 
 #Expecting 5 arguments: Scriptname, FriendName, IP of friend, session key, encrypted session key for friend
 if len(argv) == 5:
@@ -60,6 +59,8 @@ print "friendName: " + friendName
 print "friendIP: " + friendIP
 print "myKey: " + myKey
 print "friendKey: " + friendKey
+
+setSessionKey(myKey)
 
 print "Attempting to connect to friend: " + friendName
 

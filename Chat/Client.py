@@ -12,6 +12,8 @@ import subprocess
 from Crypto.Hash import *
 from Crypto.PublicKey import RSA
 
+import uuid
+
 
 pubKeyObj = ("-----BEGIN PUBLIC KEY-----\n"
 "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDtsvGHhYiJDAHkHRGvpYZ2FAW\n"
@@ -101,8 +103,7 @@ def newSessionKey():
     # generate a random secret key
     # Will be used for individual messages for users
     # New key per session
-    BLOCK_SIZE = 32
-    sessionKey = os.urandom(BLOCK_SIZE)
+    sessionKey = str(uuid.uuid4())
     
     
 def connectToFriend(friendName):

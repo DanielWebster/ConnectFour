@@ -98,6 +98,13 @@ class ReceiveThreadServer(Thread):
 
     def stop(self):
         self.shouldstop = True 
+        
+        
+def getPubKey(user):
+    print "Getting public key for user: " + user
+    cur.execute("SELECT PublicKey FROM users WHERE username=%s", (user))
+    pubKey = cur.fetchone()
+    pubKey = pubKey[0]
 
 def updateSessionKey(sessionKey):
     print "Updating sessionKey for user: " + username

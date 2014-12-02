@@ -74,12 +74,19 @@ class ReceiveThreadServer(Thread):
                 elif data == "CONNECT TO FRIEND":
                     friend = conn.recv(1024)
                     conn.send(getIP(friend))
+                    user = conn.recv(1024)
+                    userkey = getPubKey(user)
+                    print "User Key: " + userkey
+                    usercipher = AES.new(userkey)
+                    friendkey = getPubKey(friend)
+                    print "Friend Key: " + friendkey
+                    friendcipher = AES.new(friendkey)
                     if conn.recv(1024) == "OK":
                         newSessionKey()
                         print "messageSessionKey: " + messageSessionKey
-                        conn.send(messageSessionKey)
+                        conn.send(encrypt(messageSessionKey, usercipher))
                     if conn.recv(1024) == "OK":
-                        conn.send(messageSessionKey)
+                        conn.send(encrypt(messageSessionKey, friendcipher))
                 elif data == "SESSION KEY":
                     sessionKey = conn.recv(1024)
                     #print "Encrypted Key: " + sessionKey
@@ -100,11 +107,23 @@ class ReceiveThreadServer(Thread):
         self.shouldstop = True 
         
         
+def pad(s):
+    return s + ((16-len(s) % 16) * "{")
+
+def encrypt(plaintext, cipher):
+    return cipher.encrypt(pad(plaintext))
+
+def decrypt(ciphertext, cipher):
+    dec = cipher.decrypt(ciphertext).decode("utf-8")
+    l = dec.count("{")
+    return dec[:len(dec)-l]
+
 def getPubKey(user):
     print "Getting public key for user: " + user
     cur.execute("SELECT PublicKey FROM users WHERE username=%s", (user))
     pubKey = cur.fetchone()
     pubKey = pubKey[0]
+    return pubKey
 
 def updateSessionKey(sessionKey):
     print "Updating sessionKey for user: " + username

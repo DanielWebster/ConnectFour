@@ -11,6 +11,7 @@ import subprocess
 
 from Crypto.Hash import *
 from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES
 
 import uuid
 
@@ -80,10 +81,11 @@ def login():
             friends = json.loads(response)
             os.system("start python ConnectAsServer.py")
             mGui.destroy()
+            global sessionKey
             newSessionKey()
+            myCipher = AES.new(sessionKey)
             #Before communication channel is open, send the secret key
             s.send("SESSION KEY")
-            global sessionKey
             #sessionKey = "1234123412341234" *2
             s.send(serverKey.encrypt(sessionKey, 'x')[0])
             #print "Try to add a friend..."
@@ -107,18 +109,24 @@ def newSessionKey():
     sessionKey = str(uuid.uuid4().hex)
     
     
+    
 def connectToFriend(friendName):
     print "Getting friend IP from server..."
     print "Attempting to connect to friend: " + friendName
     s.send("CONNECT TO FRIEND")
     s.send(friendName)
     friendIP = s.recv(1024)
+    s.send(username.get())
     s.send("OK")
     messageSessionKey = s.recv(1024)
     s.send("OK")
     friendKey = s.recv(1024)
-    print "MessageSessionKey: " + messageSessionKey
+    print "MessageSessionKey Encrypted: " + messageSessionKey
+    messageSessionKey = decrypt(messageSessionKey, myCipher)
+    print "MessageSessionKey Decrypted: " + messageSessionKey
     print "FriendKey: " + friendKey
+    friendKey = decrypt(friendKey, myCipher)
+    print "MessageSessionKey Decrypted: " + friendKey
     os.system("start python ConnectToFriend.py " + friendName + " " + friendIP + " " + str(messageSessionKey) + " " + str(friendKey))
     
     
@@ -131,6 +139,16 @@ def newUser():
     s.send(inputs[0])
     s.send(SHA512.new(str(inputs[1]).strip()).digest()) 
 
+def pad(s):
+    return s + ((16-len(s) % 16) * "{")
+
+def encrypt(plaintext, cipher):
+    return cipher.encrypt(pad(plaintext))
+
+def decrypt(ciphertext, cipher):
+    dec = cipher.decrypt(ciphertext).decode("utf-8")
+    l = dec.count("{")
+    return dec[:len(dec)-l]
                
 """ GUI STUFF """
 mGui = Tk()

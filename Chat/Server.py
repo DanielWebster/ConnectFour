@@ -105,8 +105,7 @@ def updateSessionKey(sessionKey):
         db.commit()
     except Exception:
         print "Username does not exist!"
-        
-        
+    
     print "SessionKey updated..."
 
 def addFriend(user, friend):

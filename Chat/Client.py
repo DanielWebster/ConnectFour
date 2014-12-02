@@ -126,7 +126,7 @@ def newUser():
     proc = subprocess.Popen(['python', 'CreateUser.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     input = proc.communicate()[0]
     inputs = input.split("||")
-    
+
     s.send(inputs[0])
     s.send(SHA512.new(str(inputs[1]).strip()).digest()) 
 

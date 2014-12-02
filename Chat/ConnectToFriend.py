@@ -15,9 +15,8 @@ class ReceiveThreadClient(Thread):
         while not self.shouldstop:
             try:
                 data = self.sock.recv(1024)
-                #print "Encrypted Data: " + data
+                print "Encrypted Data: " + data
                 data = decrypt(data, sessionCipher)
-                #print "Decrypted Data: " + data
                 print friendName + ": " + data
             except timeout:
                 print 'Request timed out!'

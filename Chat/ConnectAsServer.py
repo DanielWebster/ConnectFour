@@ -15,9 +15,8 @@ class ReceiveThreadServer(Thread):
         while not self.shouldstop:
             try:
                 data = conn.recv(1024)
-                #print "Encrypted Data: " + data
+                print "Encrypted Data: " + data
                 data = decrypt(data, sessionCipher)
-                #print "Decrypted Data: " + data
                 print data
             except timeout:
                 print 'Request timed out!'

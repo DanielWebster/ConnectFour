@@ -33,7 +33,7 @@ for i in friend:
 
 mbutton = Button(friendlist, text = 'Talk', command = selectFriend, fg = 'white', bg = 'blue').grid(row = 3, column = 1, sticky = E, rowspan = 2, ipady = 10, ipadx = 50)
 mbutton2 = Button(friendlist, text = "  New Friend  ", command = addFriend, fg = 'white', bg = 'blue').grid(row = 3, column = 0, sticky = E)
-mbutton2 = Button(friendlist, text = "Delete Friend", command = deleteFriend, fg = 'white', bg = 'blue').grid(row = 4, column = 0, sticky = E)
+mbutton2 = Button(friendlist, text = " Delete Friend", command = deleteFriend, fg = 'white', bg = 'blue').grid(row = 4, column = 0, sticky = E)
 
 
 friendlist.mainloop()

@@ -10,7 +10,7 @@ def addFriend():
 newFriend = Tk()
 username = StringVar()
 
-#newFriend.geometry('350x100+200+200')
+newFriend.geometry('+100+100')
 newFriend.title("New Friend")
 
 labelName = Label(newFriend, text="Friend's Username: ").grid(row = 0, column = 0, sticky = W)

@@ -12,7 +12,6 @@ class ReceiveThreadServer(Thread):
         self.shouldstop = False
 
     def run(self):
-        #self.sock.settimeout(10)
         while not self.shouldstop:
             try:
                 data = conn.recv(1024)

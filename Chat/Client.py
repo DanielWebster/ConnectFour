@@ -82,7 +82,7 @@ def addFriend():
     if response == "FRIEND ADDED":
         pass
     elif response == "DNE":
-        tkMessageBox.showerror(title="Error",message="User does not exist!")
+        tkMessageBox.showerror(title="Error",message="Error Adding Friend!")
     
 def login(): 
     s.send("LOGIN")
@@ -111,15 +111,10 @@ def login():
                 print "sent session key"
             if s.recv(1024) == "KEY RECEIVED":
                 pass
-                #s.send("FRIENDS LIST")
-                #print "sent friendlist request"
-            #response = decrypt(s.recv(1024), myCipher)
-            #global friends
-            #friends = json.loads(response)
+               
             os.system("start python ConnectAsServer.py " + sessionKey)
             mGui.destroy()
 
-            #addFriend()
             while True:
                 #friendName = raw_input("Connect to friend: ")
                 response = displayFriends()

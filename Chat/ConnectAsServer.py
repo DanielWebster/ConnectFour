@@ -1,6 +1,7 @@
 from socket import *
 from threading import Thread
 from Crypto.Cipher import AES
+from sys import argv
 
 """ Threading method for receiving multiple messages while being able to send simultaneously """
 class ReceiveThreadServer(Thread):

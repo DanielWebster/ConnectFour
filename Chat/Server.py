@@ -36,9 +36,9 @@ def newSessionKey():
     global messageSessionKey
     # generate a random secret key
     # Will be used for individual messages for users
-    # New key per session
+    # New key per session'
+    
     messageSessionKey = str(uuid.uuid4().hex)
-
 
 """ Threading method for receiving multiple commands while being able to do other actions simultaneously """
 class ReceiveThreadServer(Thread):
@@ -80,13 +80,13 @@ class ReceiveThreadServer(Thread):
                     usercipher = AES.new(userkey)
                     friendkey = getPubKey(friend)
                     print "Friend Key: " + friendkey
-                    friendcipher = AES.new(friendkey)
                     if conn.recv(1024) == "OK":
-                        newSessionKey()
-                        print "messageSessionKey: " + messageSessionKey
-                        conn.send(encrypt(messageSessionKey, usercipher))
-                    if conn.recv(1024) == "OK":
-                        conn.send(encrypt(messageSessionKey, friendcipher))
+                        print "friendkey unencrypted: " + friendkey
+                        friendkey = privateKey.decrypt(friendkey)
+                        print "1st encryption: " + friendkey
+                        print "2nd encryption: " + encrypt(friendkey, usercipher)
+                        conn.send(encrypt(friendkey, usercipher))
+                    
                 elif data == "SESSION KEY":
                     sessionKey = conn.recv(1024)
                     #print "Encrypted Key: " + sessionKey

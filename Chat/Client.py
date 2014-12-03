@@ -15,6 +15,8 @@ from Crypto.Cipher import AES
 
 import uuid
 
+myCipher = ""
+
 
 pubKeyObj = ("-----BEGIN PUBLIC KEY-----\n"
 "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDtsvGHhYiJDAHkHRGvpYZ2FAW\n"
@@ -83,6 +85,7 @@ def login():
             mGui.destroy()
             global sessionKey
             newSessionKey()
+            global myCipher
             myCipher = AES.new(sessionKey)
             #Before communication channel is open, send the secret key
             s.send("SESSION KEY")
@@ -118,16 +121,18 @@ def connectToFriend(friendName):
     friendIP = s.recv(1024)
     s.send(username.get())
     s.send("OK")
-    messageSessionKey = s.recv(1024)
-    s.send("OK")
     friendKey = s.recv(1024)
-    print "MessageSessionKey Encrypted: " + messageSessionKey
-    messageSessionKey = decrypt(messageSessionKey, myCipher)
-    print "MessageSessionKey Decrypted: " + messageSessionKey
-    print "FriendKey: " + friendKey
-    friendKey = decrypt(friendKey, myCipher)
-    print "MessageSessionKey Decrypted: " + friendKey
-    os.system("start python ConnectToFriend.py " + friendName + " " + friendIP + " " + str(messageSessionKey) + " " + str(friendKey))
+    print "my session key: " + sessionKey
+    print "friendKey 1st Encryption: " + friendKey
+    global myCipher
+    print "friendKey 2nd Encryption: " + decrypt(friendKey, myCipher)
+    friendKey = serverKey.encrypt(decrypt(friendKey, myCipher), 'x')[0]
+    print "friendKey Decrypted: " + friendKey
+ 
+    #print "friendKey: " + friendKey
+    
+    #os.system("'start python ConnectToFriend.py' '" + friendName + "' '" + friendIP + "' '" + (messageSessionKey) + "' '" + (friendKey) + "'")
+    os.system("start python ConnectToFriend.py '" + friendName + "' '" + friendIP + "' '" + friendKey + "'")
     
     
 def newUser():
@@ -146,7 +151,10 @@ def encrypt(plaintext, cipher):
     return cipher.encrypt(pad(plaintext))
 
 def decrypt(ciphertext, cipher):
-    dec = cipher.decrypt(ciphertext).decode("utf-8")
+    try:
+        dec = cipher.decrypt(ciphertext).decode('utf-8')
+    except:
+        dec = cipher.decrypt(ciphertext)
     l = dec.count("{")
     return dec[:len(dec)-l]
                

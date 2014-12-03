@@ -45,21 +45,19 @@ def decrypt(ciphertext, cipher):
 
 
 
-#Expecting 5 arguments: Scriptname, FriendName, IP of friend, session key, encrypted session key for friend
-if len(argv) == 5:
+#Expecting 4 arguments: Scriptname, FriendName, IP of friend, encrypted session key for friend
+if len(argv) == 4:
     friendName = argv[1]
     friendIP = argv[2]
-    myKey = argv[3]
-    friendKey = argv[4]
+    friendKey = argv[3]
 else:
     print "Invalid number of arguments!"
 
 print "friendName: " + friendName
 print "friendIP: " + friendIP
-print "myKey: " + myKey
 print "friendKey: " + friendKey
 
-setSessionKey(myKey)
+setSessionKey(friendKey)
 
 print "Attempting to connect to friend: " + friendName
 
@@ -70,8 +68,8 @@ s.connect((HOST, PORT))
 
 r = ReceiveThreadClient(s).start()
 
-s.send("KEY")
-s.send(friendKey)
+#s.send("KEY")
+#s.send(friendKey)
 
 while True:
     s.send(encrypt(raw_input(), sessionCipher))

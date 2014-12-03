@@ -64,6 +64,15 @@ class ReceiveThreadServer(Thread):
                     conn.send("FRIEND RECEIVED")
                     print "friend: " + friend
                     addFriend(user, friend)
+                elif data == "DELETE FRIEND":
+                    print "removing a friend..."
+                    user = conn.recv(1024)
+                    conn.send("USER RECEIVED")
+                    print "user: " + user
+                    friend = conn.recv(1024)
+                    conn.send("FRIEND RECEIVED")
+                    print "remove friend: " + friend
+                    deleteFriend(user, friend)
                 elif data == "NEW USER":
                     createUser()
                 elif data == "LOGIN":
@@ -145,6 +154,11 @@ def updateSessionKey(sessionKey):
 def addFriend(user, friend):
     print "Adding friend \'" + friend + "\' to user \'" + user + "\'"
     cur.execute("INSERT INTO friends(username, friend) VALUES (%s, %s)", (user, friend))
+    db.commit()
+
+def deleteFriend(user, friend):
+    print "Deleting friend \'" + friend + "\' from user \'" + user + "\'"
+    cur.execute("DELETE FROM friends WHERE Username = %s and Friend = %s", (user, friend))
     db.commit()
 
 def friendsList():

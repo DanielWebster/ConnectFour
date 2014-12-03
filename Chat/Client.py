@@ -54,6 +54,16 @@ def displayFriends():
     contact = (str(input).strip())
     return contact
 
+def deleteFriend(badfriend):
+    print "Implement Delete Friend."
+    print "Delete: " + badfriend
+    s.send("DELETE FRIEND")
+    s.send(username.get())
+    if s.recv(1024) == "USER RECEIVED":
+        s.send(badfriend)
+    if s.recv(1024) == "FRIEND DELETED":
+        pass
+
 def addFriend():
     proc = subprocess.Popen(['python', 'AddFriend.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     input = proc.communicate()[0]
@@ -107,10 +117,14 @@ def login():
             while True:
                 #friendName = raw_input("Connect to friend: ")
                 response = displayFriends()
-                if (response == "ADD FRIEND"):
+                stored_response = response
+                response = response.split(" ")
+                if (response[0] == "ADD"):
                     addFriend()
+                elif (response[0] == "DELETE"):
+                    deleteFriend(response[1])
                 else:
-                    connectToFriend(response)
+                    connectToFriend(stored_response)
             break
         elif response == "INVALID CREDENTIALS":
             tkMessageBox.showerror(title="Error",message="Wrong username/password combination!")

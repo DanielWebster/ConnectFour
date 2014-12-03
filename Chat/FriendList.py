@@ -8,7 +8,7 @@ def selectFriend():
     friendlist.destroy()
     
 def addFriend():
-    print "ADD FRIEND"
+    print "ADD"
     friendlist.destroy()
 
 def deleteFriend():

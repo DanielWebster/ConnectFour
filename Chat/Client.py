@@ -97,7 +97,11 @@ def login():
             #addFriend()
             while True:
                 #friendName = raw_input("Connect to friend: ")
-                connectToFriend(displayFriends())
+                response = displayFriends()
+                if (response == "ADD FRIEND"):
+                    addFriend()
+                else:
+                    connectToFriend(response)
             break
         elif response == "INVALID CREDENTIALS":
             tkMessageBox.showerror(title="Error",message="Wrong username/password combination!")

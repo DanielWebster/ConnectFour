@@ -63,7 +63,13 @@ class ReceiveThreadServer(Thread):
                     friend = conn.recv(1024)
                     conn.send("FRIEND RECEIVED")
                     print "friend: " + friend
-                    addFriend(user, friend)
+                    if userExists(friend):
+                        print "User exists!"
+                        addFriend(user, friend)
+                    else:
+                        print "User does not exist!"
+                        #conn.send("DNE")
+
                 elif data == "DELETE FRIEND":
                     print "removing a friend..."
                     user = conn.recv(1024)
@@ -121,7 +127,16 @@ class ReceiveThreadServer(Thread):
     def stop(self):
         self.shouldstop = True 
         
-        
+def userExists(check_user):
+    """ ******************* CHECK IF USERNAME ALREADY EXISTS ******************** """
+    cur.execute("SELECT Username FROM users WHERE Username=%s", check_user)
+    try:
+        stored = cur.fetchone()
+        stored = stored[0]
+        return True
+    except Exception:
+        return False
+
 def pad(s):
     return s + ((16-len(s) % 16) * "{")
 
@@ -262,8 +277,7 @@ def attempt_login():
             conn.send("INVALID CREDENTIALS")
             print "invalid credentials"
             return False
-        
-        
+
 """ CONNECT TO DATABASE """
 db = MySQLdb.connect(host="localhost", user="root", passwd="0000", db="chat") 
 

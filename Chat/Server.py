@@ -29,7 +29,7 @@ privKeyObj = ("-----BEGIN RSA PRIVATE KEY-----\n"
 privateKey = RSA.importKey(privKeyObj)
 username = ""
 friendsArr = []
-
+usercipher = ''
 messageSessionKey = ''
 
 def newSessionKey():
@@ -77,6 +77,7 @@ class ReceiveThreadServer(Thread):
                     user = conn.recv(1024)
                     userkey = getPubKey(user)
                     print "User Key: " + userkey
+                    global usercipher
                     usercipher = AES.new(userkey)
                     friendkey = getPubKey(friend)
                     print "Friend Key: " + friendkey
@@ -89,16 +90,20 @@ class ReceiveThreadServer(Thread):
                     
                 elif data == "SESSION KEY":
                     sessionKey = conn.recv(1024)
-                    #print "Encrypted Key: " + sessionKey
+                    print "Encrypted Key: " + sessionKey
                     sessionKey = privateKey.decrypt(sessionKey)
-                    #print "SESSION key: " + sessionKey
+                    print "SESSION key: " + sessionKey
                     updateSessionKey(sessionKey)
+                    conn.send("KEY RECEIVED")
                 elif data == "FRIENDS LIST":
                     #Get and send friend list + respective IPs to user
                     friendsList()
                 elif data == "UPDATE IP":
                     #Update IP for user in DB
                     updateIP()
+                    conn.send("IP UPDATED")
+                else:
+                    print "something went wrong!"
                 #print data
             except timeout:
                 print 'Request timed out!'
@@ -143,14 +148,18 @@ def addFriend(user, friend):
 
 def friendsList():
     #Get complete list of all friends + their IPs for logged in user
+    global usercipher
     print "Getting friends list for " + username
     cur.execute("SELECT friend FROM friends WHERE username=%s", (username))
     friendsArr = []
     for row in cur.fetchall():
         friendsArr.append([row[0]])
         
-    """ Serializing the list to send over the connection """    
-    conn.send(json.dumps(friendsArr))
+    """ Serializing the list to send over the connection """  
+    userkey = getPubKey(username)
+    global usercipher
+    usercipher = AES.new(userkey)  
+    conn.send(encrypt(json.dumps(friendsArr), usercipher))
         
 def getIP(user):
     #print "Getting IP for " + user

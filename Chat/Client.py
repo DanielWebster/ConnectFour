@@ -76,22 +76,24 @@ def login():
             s.send("OK")
         elif response == "LOGIN SUCCESSFUL":
             print "Successfully logged in!"
-            s.send("UPDATE IP")
-            s.send("FRIENDS LIST")
-            response = s.recv(1024)
-            global friends
-            friends = json.loads(response)
             global sessionKey
             newSessionKey()
-            os.system("start python ConnectAsServer.py " + sessionKey)
-            mGui.destroy()
             global myCipher
             myCipher = AES.new(sessionKey)
-            #Before communication channel is open, send the secret key
-            s.send("SESSION KEY")
-            #sessionKey = "1234123412341234" *2
-            s.send(serverKey.encrypt(sessionKey, 'x')[0])
-            #print "Try to add a friend..."
+            s.send("UPDATE IP")
+            if s.recv(1024) == "IP UPDATED":
+                s.send("SESSION KEY")
+                s.send(serverKey.encrypt(sessionKey, 'x')[0])
+                print "sent session key"
+            if s.recv(1024) == "KEY RECEIVED":
+                s.send("FRIENDS LIST")
+                print "sent friendlist request"
+            response = decrypt(s.recv(1024), myCipher)
+            global friends
+            friends = json.loads(response)
+            os.system("start python ConnectAsServer.py " + sessionKey)
+            mGui.destroy()
+
             #addFriend()
             while True:
                 #friendName = raw_input("Connect to friend: ")

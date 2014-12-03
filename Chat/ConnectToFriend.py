@@ -61,15 +61,15 @@ setSessionKey(friendKey)
 
 print "Attempting to connect to friend: " + friendName
 
-HOST = friendIP
-PORT = 9001
-s = socket(AF_INET, SOCK_STREAM)
-s.connect((HOST, PORT))
-
-r = ReceiveThreadClient(s).start()
-
-#s.send("KEY")
-#s.send(friendKey)
-
-while True:
-    s.send(encrypt(raw_input(), sessionCipher))
+# HOST = friendIP
+# PORT = 9001
+# s = socket(AF_INET, SOCK_STREAM)
+# s.connect((HOST, PORT))
+# 
+# r = ReceiveThreadClient(s).start()
+# 
+# #s.send("KEY")
+# #s.send(friendKey)
+# 
+# while True:
+#     s.send(encrypt(raw_input(), sessionCipher))

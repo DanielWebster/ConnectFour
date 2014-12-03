@@ -15,12 +15,9 @@ class ReceiveThreadServer(Thread):
         while not self.shouldstop:
             try:
                 data = conn.recv(1024)
-                if data == "KEY":
-                    secretkey = conn.recv(1024)
-                    setSessionKey(secretkey)
-                else:
-                    print "Encrypted Data: " + data
-                    data = decrypt(data, sessionCipher)
+                print "Encrypted Data: " + data
+                global sessionCipher
+                data = decrypt(data, sessionCipher)
                 print data
             except timeout:
                 print 'Request timed out!'
@@ -45,7 +42,13 @@ def decrypt(ciphertext, cipher):
     l = dec.count("{")
     return dec[:len(dec)-l]
 
+#Expecting 2 arguments: Scriptname, my session key
+if len(argv) == 2:
+    sessionKey = argv[1]
+else:
+    print "Invalid number of arguments!"
 
+setSessionKey(sessionKey)
 
 print "Connecting as Server..."    
 HOST = gethostbyname(gethostname())

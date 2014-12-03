@@ -81,10 +81,10 @@ def login():
             response = s.recv(1024)
             global friends
             friends = json.loads(response)
-            os.system("start python ConnectAsServer.py")
-            mGui.destroy()
             global sessionKey
             newSessionKey()
+            os.system("start python ConnectAsServer.py " + sessionKey)
+            mGui.destroy()
             global myCipher
             myCipher = AES.new(sessionKey)
             #Before communication channel is open, send the secret key
@@ -132,7 +132,7 @@ def connectToFriend(friendName):
     #print "friendKey: " + friendKey
     
     #os.system("'start python ConnectToFriend.py' '" + friendName + "' '" + friendIP + "' '" + (messageSessionKey) + "' '" + (friendKey) + "'")
-    os.system("start python ConnectToFriend.py '" + friendName + "' '" + friendIP + "' '" + friendKey + "'")
+    os.system("start python ConnectToFriend.py " + friendName + " " + friendIP + " " + friendKey)
     
     
 def newUser():

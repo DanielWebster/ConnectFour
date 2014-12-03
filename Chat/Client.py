@@ -61,8 +61,11 @@ def deleteFriend(badfriend):
     s.send(username.get())
     if s.recv(1024) == "USER RECEIVED":
         s.send(badfriend)
-    if s.recv(1024) == "FRIEND DELETED":
+    response = s.recv(1024)
+    if response == "FRIEND DELETED":
         pass
+    elif response == "DNE":
+        tkMessageBox.showerror(title="Error",message="Friendship does not exist!")
 
 def addFriend():
     proc = subprocess.Popen(['python', 'AddFriend.py'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -75,8 +78,11 @@ def addFriend():
     s.send(username.get())
     if s.recv(1024) == "USER RECEIVED":
         s.send(friend)
-    if s.recv(1024) == "FRIEND RECEIVED":
+    response = s.recv(1024)
+    if response == "FRIEND ADDED":
         pass
+    elif response == "DNE":
+        tkMessageBox.showerror(title="Error",message="User does not exist!")
     
 def login(): 
     s.send("LOGIN")

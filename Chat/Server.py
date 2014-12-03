@@ -61,14 +61,14 @@ class ReceiveThreadServer(Thread):
                     conn.send("USER RECEIVED")
                     print "user: " + user
                     friend = conn.recv(1024)
-                    conn.send("FRIEND RECEIVED")
                     print "friend: " + friend
-                    if userExists(friend):
+                    if userExists(friend) and not friendshipExists(user,friend):
                         print "User exists!"
                         addFriend(user, friend)
+                        conn.send("FRIEND ADDED")
                     else:
                         print "User does not exist!"
-                        #conn.send("DNE")
+                        conn.send("DNE")
 
                 elif data == "DELETE FRIEND":
                     print "removing a friend..."
@@ -76,9 +76,15 @@ class ReceiveThreadServer(Thread):
                     conn.send("USER RECEIVED")
                     print "user: " + user
                     friend = conn.recv(1024)
-                    conn.send("FRIEND RECEIVED")
                     print "remove friend: " + friend
-                    deleteFriend(user, friend)
+                    if friendshipExists(user,friend):
+                        print "Friend exists!"
+                        deleteFriend(user, friend)
+                        conn.send("FRIEND DELETED")
+                    else:
+                        print "User does not exist!"
+                        conn.send("DNE")
+                    
                 elif data == "NEW USER":
                     createUser()
                 elif data == "LOGIN":
@@ -126,6 +132,16 @@ class ReceiveThreadServer(Thread):
 
     def stop(self):
         self.shouldstop = True 
+
+def friendshipExists(check_user, check_friend):
+    """ ******************* CHECK IF USERNAME ALREADY EXISTS ******************** """
+    cur.execute("SELECT Username FROM friends WHERE Username=%s AND Friend=%s", (check_user, check_friend))
+    try:
+        stored = cur.fetchone()
+        stored = stored[0]
+        return True
+    except Exception:
+        return False
         
 def userExists(check_user):
     """ ******************* CHECK IF USERNAME ALREADY EXISTS ******************** """

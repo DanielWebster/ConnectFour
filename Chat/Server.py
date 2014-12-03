@@ -255,7 +255,8 @@ db = MySQLdb.connect(host="localhost", user="root", passwd="0000", db="chat")
 cur = db.cursor() 
 
 """ SETUP CONNECTION FOR PROCESS """
-HOST = '172.18.44.108' 
+#HOST = '172.18.44.108' 
+HOST = 'localhost'
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.bind((HOST, PORT)) 

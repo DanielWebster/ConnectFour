@@ -31,13 +31,19 @@ sessionKey = ''
 
 friends = []
 
-HOST = '172.18.44.108'
+HOST = 'localhost'
+#HOST = '172.18.44.108'
 PORT = 9000
 s = socket(AF_INET, SOCK_STREAM)
 s.connect((HOST, PORT))
 
 
 def displayFriends():
+    s.send("FRIENDS LIST")
+    print "sent friendlist request"
+    response = decrypt(s.recv(1024), myCipher)
+    global friends
+    friends = json.loads(response)
     friendlist = ''
     for friend in friends:
         friendlist += (friend[0] + " ")

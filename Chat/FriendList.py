@@ -11,6 +11,10 @@ def addFriend():
     print "ADD FRIEND"
     friendlist.destroy()
 
+def deleteFriend():
+    print "DELETE " + listbox.get(listbox.curselection())
+    friendlist.destroy()
+
 friendlist = Tk()
 username = StringVar()
 
@@ -27,8 +31,9 @@ friend = argv[1].split(" ")
 for i in friend:
     listbox.insert(END, i)
 
-mbutton = Button(friendlist, text = '               Talk               ', command = selectFriend, fg = 'white', bg = 'blue').grid(row = 3, column = 1, sticky = E)
-mbutton2 = Button(friendlist, text = "Add Friend", command = addFriend, fg = 'white', bg = 'blue').grid(row = 3, column = 0, sticky = E)
+mbutton = Button(friendlist, text = 'Talk', command = selectFriend, fg = 'white', bg = 'blue').grid(row = 3, column = 1, sticky = E, rowspan = 2, ipady = 10, ipadx = 50)
+mbutton2 = Button(friendlist, text = "  Add Friend  ", command = addFriend, fg = 'white', bg = 'blue').grid(row = 3, column = 0, sticky = E)
+mbutton2 = Button(friendlist, text = "Delete Friend", command = deleteFriend, fg = 'white', bg = 'blue').grid(row = 4, column = 0, sticky = E)
 
 
 friendlist.mainloop()

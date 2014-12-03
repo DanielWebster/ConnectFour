@@ -61,6 +61,7 @@ class ReceiveThreadServer(Thread):
                     conn.send("USER RECEIVED")
                     print "user: " + user
                     friend = conn.recv(1024)
+                    conn.send("FRIEND RECEIVED")
                     print "friend: " + friend
                     addFriend(user, friend)
                 elif data == "NEW USER":
@@ -102,8 +103,8 @@ class ReceiveThreadServer(Thread):
                     #Update IP for user in DB
                     updateIP()
                     conn.send("IP UPDATED")
-                else:
-                    print "something went wrong!"
+                #else:
+                #    print "something went wrong!"
                 #print data
             except timeout:
                 print 'Request timed out!'

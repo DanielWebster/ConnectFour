@@ -65,7 +65,9 @@ def addFriend():
     s.send(username.get())
     if s.recv(1024) == "USER RECEIVED":
         s.send(friend)
-
+    if s.recv(1024) == "FRIEND RECEIVED":
+        pass
+    
 def login(): 
     s.send("LOGIN")
     while True: 
@@ -92,11 +94,12 @@ def login():
                 s.send(serverKey.encrypt(sessionKey, 'x')[0])
                 print "sent session key"
             if s.recv(1024) == "KEY RECEIVED":
-                s.send("FRIENDS LIST")
-                print "sent friendlist request"
-            response = decrypt(s.recv(1024), myCipher)
-            global friends
-            friends = json.loads(response)
+                pass
+                #s.send("FRIENDS LIST")
+                #print "sent friendlist request"
+            #response = decrypt(s.recv(1024), myCipher)
+            #global friends
+            #friends = json.loads(response)
             os.system("start python ConnectAsServer.py " + sessionKey)
             mGui.destroy()
 
@@ -175,7 +178,7 @@ mGui = Tk()
 username = StringVar()
 password = StringVar()
 
-mGui.geometry('450x200+200+200')
+mGui.geometry('350x100+500+200')
 mGui.title("Networking Chat Project")
 
 pwlabel = Label(mGui, text='Username: ').grid(row = 0, column = 0, sticky = W)
@@ -184,7 +187,7 @@ unlabel1 = Label(mGui, text='Password: ').grid(row = 1, column = 0, sticky = W)
 unEntry = Entry(mGui, textvariable=username).grid(row = 0, column = 1)
 pwEntry = Entry(mGui, textvariable=password, show="*").grid(row = 1, column = 1)
 
-mbutton = Button(mGui, text = 'OK', command = login, fg = 'yellow', bg = 'red').grid(row = 2, column = 1, sticky = E)
+mbutton = Button(mGui, text = 'LOGIN', command = login, fg = 'yellow', bg = 'red').grid(row = 2, column = 1, sticky = E)
 
 menubar = Menu(mGui)
 

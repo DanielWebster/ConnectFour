@@ -10,9 +10,11 @@ public class Heuristic {
 	private int winningDiagonalsP1 = -1;
 	private int winningDiagonalsP2 = -1;
 	private int heuristic;
+	private int board[][];
 	
-	public int heuristic() {
+	public int heuristic(int board[][]) {
 
+		this.board=board;
 		
 		// Calculate winning rows
 		winningRowsP1 = calculateWinningRows(1);
@@ -38,6 +40,10 @@ public class Heuristic {
 	}
 	
 	public int calculateWinningColumns(int player) {
+		int winningColumns = 0;
+		int countEmptyOrPlayer = 0;
+		
+		
 		
 		return 0;
 	}

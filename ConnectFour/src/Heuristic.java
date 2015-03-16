@@ -14,7 +14,7 @@ public class Heuristic {
 	
 	public int heuristic(int board[][]) {
 
-		this.board=board;
+		this.board = board;
 		
 		// Calculate winning rows
 		winningRowsP1 = calculateWinningRows(1);
@@ -42,6 +42,23 @@ public class Heuristic {
 	public int calculateWinningColumns(int player) {
 		int winningColumns = 0;
 		int countEmptyOrPlayer = 0;
+		
+		for(int i = 0; i < board.length; i++) {
+			for(int j = 0; j < board[0].length; j++) {
+				if(board[i][j] == 0 || board[i][j] == player) {
+					countEmptyOrPlayer++;
+				}
+				else {
+					countEmptyOrPlayer = 0;
+				}
+					
+				if(countEmptyOrPlayer == 4) {
+					winningColumns++;
+					countEmptyOrPlayer = 0;
+					break;
+				}
+			}
+		}
 		
 		
 		

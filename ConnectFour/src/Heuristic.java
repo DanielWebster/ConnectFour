@@ -35,8 +35,26 @@ public class Heuristic {
 	}
 	
 	public int calculateWinningRows(int player) {
+		int winningRows = 0;
+		int countEmptyOrPlayer = 0;
 		
-		return 0;
+		for(int j = 0; j < board[0].length; j++) {
+			countEmptyOrPlayer = 0;
+			for( int i = 0; i < board.length; i++) {
+				if(board[i][j] == player || board[i][j] == 0) {
+					countEmptyOrPlayer++;
+				}
+				else {
+					countEmptyOrPlayer = 0;
+				}
+				if(countEmptyOrPlayer == 4) {
+					winningRows++;
+					break;
+				}
+			}
+		}
+		
+		return winningRows;
 	}
 	
 	public int calculateWinningColumns(int player) {

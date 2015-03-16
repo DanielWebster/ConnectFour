@@ -60,9 +60,7 @@ public class Heuristic {
 			}
 		}
 		
-		
-		
-		return 0;
+		return winningColumns;
 	}
 	
 	public int calculateWinningDiagonals(int player) {

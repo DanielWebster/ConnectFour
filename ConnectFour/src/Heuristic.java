@@ -64,8 +64,38 @@ public class Heuristic {
 	}
 	
 	public int calculateWinningDiagonals(int player) {
+		//TODO: Problem: Currently will double count some diagonals. 
 		
-		return 0;
+		int winningDiagonals = 0;
+
+		for (int j = 0; j < board[0].length; j++)
+		{
+			for (int i = 0; i < board.length; i++)
+			{
+				try
+				{
+					//bottom left to top right diagonal
+					if(board[i][j] == player || board[i][j] == 0) { 
+						if(board[i+1][j-1] == player || board[i+1][j-1] == 0) { 
+							if(board[i+2][j-2] == player || board[i+2][j-2] == 0) {
+								if(board[i+3][j-3] == player || board[i+3][j-3] == 0) {
+									winningDiagonals++;
+									}}}}
+					
+					// top left to bottom right diagonal
+					if(board[i][j] == player || board[i][j] == 0) {
+						if(board[i+1][j+1] == player || board[i+1][j+1] == 0) {
+							if(board[i+2][j+2] == player || board[i+2][j+2] == 0) {
+								if(board[i+3][j+3] == player || board[i+3][j+3] == 0) {
+									winningDiagonals++;
+									}}}}
+					
+				}
+				catch(ArrayIndexOutOfBoundsException e) {}
+			}
+		}
+		
+		return winningDiagonals;
 	}
 
 }

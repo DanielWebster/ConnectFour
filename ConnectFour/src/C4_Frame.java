@@ -86,6 +86,10 @@ public class C4_Frame
 								
 								// Print the board
 								game.getConnectFour().printBoard();
+								
+								// Print the heuristic
+								int heuristic = new Heuristic().heuristic(game.getConnectFour().getBoard());
+								System.out.println("Heuristic: " + heuristic);
 
 								manualDialogue();
 								if (game.getCurrentPlayer() == 1)

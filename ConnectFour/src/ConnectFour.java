@@ -103,6 +103,7 @@ public class ConnectFour
 			}
 			System.out.println();
 		}
+		System.out.println();
 	}
 	
 	public void setBoard()

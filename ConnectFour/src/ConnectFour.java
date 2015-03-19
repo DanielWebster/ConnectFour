@@ -9,6 +9,7 @@ public class ConnectFour
 	private int yCoordinate;
 	private int row;
 	private int board[][];
+	private int diagonals[][][] = new int[12][6][2]; // 12 = number of diagonals; 6 = max coordinate positions; 2 = xy coordinates
 	
 	private PrintWriter writer;
 	
@@ -18,7 +19,7 @@ public class ConnectFour
 		row = 6;
 		board = new int[row][column];
 		setBoard();
-		
+		setDiagonals();
 		writer = null;
 		
 		try 
@@ -196,44 +197,124 @@ public class ConnectFour
 			countP2 = 0;
 		}
 		
-		// Diagonal wins
-		for (int j = 0; j < row; j++)
-		{
-			for (int i = 0; i < column; i++)
-			{
-				try
-				{
-					//bottom left to top right diagonal
-					if(board[i][j] == 1) { 
-						if(board[i+1][j-1] == 1) { 
-							if(board[i+2][j-2] == 1) {
-								if(board[i+3][j-3] == 1) {
-									found = true;
-									break; }}}}
-					if(board[i][j] == 2) {
-						if(board[i+1][j-1] == 2) {
-							if(board[i+2][j-2] == 2) {
-								if(board[i+3][j-3] == 2) {
-									found = true;
-									break; }}}}
-					
-					// top left to bottom right diagonal
-					if(board[i][j] == 1) {
-						if(board[i+1][j+1] == 1) {
-							if(board[i+2][j+2] == 1) {
-								if(board[i+3][j+3] == 1) {
-									found = true;
-									break; }}}}
-					if(board[i][j] == 2) {
-						if(board[i+1][j+1] == 2) {
-							if(board[i+2][j+2] == 2) {
-								if(board[i+3][j+3] == 2) {
-									found = true;
-									break; }}}}
+		int countPlayer1 = 0;
+		int countPlayer2 = 0;
+		int row, column;
+		
+		for(int i = 0; i < diagonals.length; i++) {
+			for(int j = 0; j < diagonals[0].length; j++) {
+				row = diagonals[i][j][0];
+				column = diagonals[i][j][1];
+				if(row != -1 && column != -1) {
+					if(board[row][column] == 1) { 
+						countPlayer1++; 
+						countPlayer2 = 0;
+					}
+					else if(board[row][column] == 2) { 
+						countPlayer2++; 
+						countPlayer1 = 0;
+					}
+					else { 
+						countPlayer2 = 0;
+						countPlayer1 = 0;
+					}
+					if(countPlayer1 == 4 || countPlayer2 == 4) {
+						found = true;
+						break;
+					}
 				}
-				catch(ArrayIndexOutOfBoundsException e) {}
 			}
 		}
 			return found;
 	}
+	
+	public void setDiagonals() {
+		//int diagonals[12][6][2];
+		
+		diagonals[0][0][0] = 2; diagonals[0][0][1] = 0;
+		diagonals[0][1][0] = 3; diagonals[0][1][1] = 1;
+		diagonals[0][2][0] = 4; diagonals[0][2][1] = 2;
+		diagonals[0][3][0] = 5; diagonals[0][3][1] = 3;
+		diagonals[0][4][0] = -1; diagonals[0][4][1] = -1;
+		diagonals[0][5][0] = -1; diagonals[0][5][1] = -1;
+
+		diagonals[1][0][0] = 1; diagonals[1][0][1] = 0;
+		diagonals[1][1][0] = 2; diagonals[1][1][1] = 1;
+		diagonals[1][2][0] = 3; diagonals[1][2][1] = 2;
+		diagonals[1][3][0] = 4; diagonals[1][3][1] = 3;
+		diagonals[1][4][0] = 5; diagonals[1][4][1] = 4;
+		diagonals[1][5][0] = -1; diagonals[1][5][1] = -1;
+
+		diagonals[2][0][0] = 0; diagonals[2][0][1] = 0;
+		diagonals[2][1][0] = 1; diagonals[2][1][1] = 1;
+		diagonals[2][2][0] = 2; diagonals[2][2][1] = 2;
+		diagonals[2][3][0] = 3; diagonals[2][3][1] = 3;
+		diagonals[2][4][0] = 4; diagonals[2][4][1] = 4;
+		diagonals[2][5][0] = 5; diagonals[2][5][1] = 5;
+
+		diagonals[3][0][0] = 0; diagonals[3][0][1] = 1;
+		diagonals[3][1][0] = 1; diagonals[3][1][1] = 2;
+		diagonals[3][2][0] = 2; diagonals[3][2][1] = 3;
+		diagonals[3][3][0] = 3; diagonals[3][3][1] = 4;
+		diagonals[3][4][0] = 4; diagonals[3][4][1] = 5;
+		diagonals[3][5][0] = 5; diagonals[3][5][1] = 6;
+
+		diagonals[4][0][0] = 0; diagonals[4][0][1] = 2;
+		diagonals[4][1][0] = 1; diagonals[4][1][1] = 3;
+		diagonals[4][2][0] = 2; diagonals[4][2][1] = 4;
+		diagonals[4][3][0] = 3; diagonals[4][3][1] = 5;
+		diagonals[4][4][0] = 4; diagonals[4][4][1] = 6;
+		diagonals[4][5][0] = -1; diagonals[4][5][1] = -1;
+
+		diagonals[5][0][0] = 0; diagonals[5][0][1] = 3;
+		diagonals[5][1][0] = 1; diagonals[5][1][1] = 4;
+		diagonals[5][2][0] = 2; diagonals[5][2][1] = 5;
+		diagonals[5][3][0] = 3; diagonals[5][3][1] = 6;
+		diagonals[5][4][0] = -1; diagonals[5][4][1] = -1;
+		diagonals[5][5][0] = -1; diagonals[5][5][1] = -1;
+
+		diagonals[6][0][0] = 3; diagonals[6][0][1] = 0;
+		diagonals[6][1][0] = 2; diagonals[6][1][1] = 1;
+		diagonals[6][2][0] = 1; diagonals[6][2][1] = 2;
+		diagonals[6][3][0] = 0; diagonals[6][3][1] = 3;
+		diagonals[6][4][0] = -1; diagonals[6][4][1] = -1;
+		diagonals[6][5][0] = -1; diagonals[6][5][1] = -1;
+
+		diagonals[7][0][0] = 4; diagonals[7][0][1] = 0;
+		diagonals[7][1][0] = 3; diagonals[7][1][1] = 1;
+		diagonals[7][2][0] = 2; diagonals[7][2][1] = 2;
+		diagonals[7][3][0] = 1; diagonals[7][3][1] = 3;
+		diagonals[7][4][0] = 0; diagonals[7][4][1] = 4;
+		diagonals[7][5][0] = -1; diagonals[7][5][1] = -1;
+
+		diagonals[8][0][0] = 5; diagonals[8][0][1] = 0;
+		diagonals[8][1][0] = 4; diagonals[8][1][1] = 1;
+		diagonals[8][2][0] = 3; diagonals[8][2][1] = 2;
+		diagonals[8][3][0] = 2; diagonals[8][3][1] = 3;
+		diagonals[8][4][0] = 1; diagonals[8][4][1] = 4;
+		diagonals[8][5][0] = 0; diagonals[8][5][1] = 5;
+
+		diagonals[9][0][0] = 5; diagonals[9][0][1] = 1;
+		diagonals[9][1][0] = 4; diagonals[9][1][1] = 2;
+		diagonals[9][2][0] = 3; diagonals[9][2][1] = 3;
+		diagonals[9][3][0] = 2; diagonals[9][3][1] = 4;
+		diagonals[9][4][0] = 1; diagonals[9][4][1] = 5;
+		diagonals[9][5][0] = 0; diagonals[9][5][1] = 6;
+
+		diagonals[10][0][0] = 5; diagonals[10][0][1] = 2;
+		diagonals[10][1][0] = 4; diagonals[10][1][1] = 3;
+		diagonals[10][2][0] = 3; diagonals[10][2][1] = 4;
+		diagonals[10][3][0] = 2; diagonals[10][3][1] = 5;
+		diagonals[10][4][0] = 1; diagonals[10][4][1] = 6;
+		diagonals[10][5][0] = -1; diagonals[10][5][1] = -1;
+
+		diagonals[11][0][0] = 5; diagonals[11][0][1] = 3;
+		diagonals[11][1][0] = 4; diagonals[11][1][1] = 4;
+		diagonals[11][2][0] = 3; diagonals[11][2][1] = 5;
+		diagonals[11][3][0] = 2; diagonals[11][3][1] = 6;
+		diagonals[11][4][0] = -1; diagonals[11][4][1] = -1;
+		diagonals[11][5][0] = -1; diagonals[11][5][1] = -1;
+		
+	}
+	
 }

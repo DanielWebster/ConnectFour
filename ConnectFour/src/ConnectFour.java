@@ -76,6 +76,54 @@ public class ConnectFour
 		}
 	}
 	
+	public void makeTurn(int[][] currentBoard, int retCol, int player)
+	{
+
+		int[][] newBoard = new int[row][column];
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
+				newBoard[i][j] = currentBoard[i][j];
+			}
+		}
+		//board2 = currentBoard;
+		// If the column entered is not a valid column [1-7], 
+		// then compute a random column in the range
+		if(retCol < 1 || retCol > 7)
+		{
+			retCol = (int)(Math.random()*6+1);
+		}
+		
+		// Decrement column by 1 for array purposes
+		retCol--;
+		
+		// If the column is filled, 
+		// then randomly assign a column until a valid column is selected
+		while (newBoard[0][retCol] != 0)
+		{
+			retCol = (int)(Math.random()*6+1);
+		}
+		
+		// Start at the bottom row [row 5 in the array]
+		for(int i = row-1; i >= 0; i--)
+		{
+			if(newBoard[i][retCol] == 0)
+			{
+				newBoard[i][retCol] = player;
+				//xCoordinate = i;
+				//yCoordinate = retCol;
+//				System.out.println("x-coord: " + xCoordinate);
+//				System.out.println("y-coord: " + yCoordinate);
+
+				break;
+			}
+		}
+		
+		setBoard(newBoard);
+		//newBoard.printBoard();
+		
+		//return newBoard;
+	}
+	
 	
 	
 	public int getColumn() 
@@ -115,6 +163,11 @@ public class ConnectFour
 				board[i][j] = 0;
 			}
 		} 
+	}
+	
+	public void setBoard(int[][] board)
+	{
+		this.board = board;
 	}
 	
 	public boolean checkTie()

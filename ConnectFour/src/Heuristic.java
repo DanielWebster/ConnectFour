@@ -30,7 +30,7 @@ public class Heuristic {
 		winningDiagonalsP1 = calculateWinningDiagonals(1);
 		winningDiagonalsP2 = calculateWinningDiagonals(2);
 		
-		System.out.println("winningD1: " + winningDiagonalsP1 + " winningD2: " + winningDiagonalsP2);
+		//System.out.println("winningD1: " + winningDiagonalsP1 + " winningD2: " + winningDiagonalsP2);
 		
 		winningOptionsP1 = winningRowsP1 + winningColumnsP1 + winningDiagonalsP1;
 		winningOptionsP2 = winningRowsP2 + winningColumnsP2 + winningDiagonalsP2;

@@ -2,6 +2,7 @@
 public class State {
 	
 	private int column;
+	private int nextBestMove;
 	private int heuristic;
 	private int depth;
 	private int id;
@@ -9,14 +10,23 @@ public class State {
 	private int childId[];
 	private int numChild;
 	
+	
 	public State(int column, int heuristic, int depth, int id, int parentId) {
 		this.column = column;
+		this.nextBestMove = -1;
 		this.heuristic = heuristic;
 		this.depth = depth;
 		this.id = id;
 		this.numChild = 0;
-		this.childId = new int[7];
 		this.parentId = parentId;
+		this.childId = new int[7];
+		for ( int i = 0; i < childId.length; i++ ) {
+			childId[i] = -1;
+		}
+	}
+	
+	public int getNextBestMove() {
+		return nextBestMove;
 	}
 	
 	public int getColumn() {
@@ -49,6 +59,10 @@ public class State {
 	
 	public int getNumChild() {
 		return numChild;
+	}
+	
+	public void setNextBestMove(int nextBestMove) {
+		this.nextBestMove = nextBestMove;
 	}
 	
 	public void setHeuristic(int heuristic) {

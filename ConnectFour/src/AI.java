@@ -35,9 +35,11 @@ public class AI {
 
 
 		long startTime = System.nanoTime();
-
+		// Initialize the top depth (column, heuristic, depth, id, parentId)
+		states[currentStates++] = new State(-1, 0, 0, 0, -1);
 		// Get the heuristics for each state of the game up to a set MAX_DEPTH
 		evaluateState(c4, 1, 2);
+
 		System.out.println("totalStates: " + currentStates);
 
 		long estimatedTime = System.nanoTime() - startTime;
@@ -60,20 +62,22 @@ public class AI {
 		startTime = System.nanoTime();
 
 
+//		for (int i = 0; i < currentStates; i++) {
+//			//System.out.println("Parents: " + states[i].getParentId());
+//			//System.out.println("Id: " + states[i].getId());
+//			System.out.println("Id: " + states[i].getId() + " Depth: " + states[i].getDepth());
+//		}
 		for (int i = 0; i < currentStates; i++) {
 			//System.out.println("currentState Id: " + states[i].getId());
 			//System.out.println("currentState parentId: " + states[i].getParentId());
 			for (int j = 0; j < currentStates; j++) {
-				if (states[j].getId() == states[i].getParentId()) {
-					states[j].addChild(states[i].getId());
+				if (states[i].getId() == states[j].getParentId()) {
+					states[i].addChild(states[j].getId());
 					//System.out.println("child of [" + states[j].getId() + "]: " + states[i].getId());
 				}
-
 			}
-
-
-
 		}
+		
 		estimatedTime = System.nanoTime() - startTime;
 		timeElapsedInSeconds = (long) (estimatedTime / (Math.pow(10, 9)));
 		System.out.println("Time taken for 2 loops: " + timeElapsedInSeconds + " seconds");
@@ -81,10 +85,11 @@ public class AI {
 //		for ( int i = 0; i < currentStates; i++) {
 //			System.out.println("Heuristics " + i + " : " + states[i].getHeuristic());
 //		}
-		for(int currentDepth = MAX_DEPTH; currentDepth > 0; currentDepth--) {
+		for(int currentDepth = MAX_DEPTH; currentDepth >= 0; currentDepth--) {
 			for(int i = 0; i < currentStates; i++) {
 				if (states[i].getDepth() == currentDepth) {
-
+//					System.out.println("State Depth: " + states[i].getDepth() + " currentDepth: " + currentDepth);
+//					System.out.println("Id: " + states[i].getId() + " i: " + i);
 					if (states[i].getDepth() == currentDepth) {
 						//System.out.println("currentDepth: " + currentDepth);
 						//states[i].printChildren();
@@ -92,30 +97,46 @@ public class AI {
 						int children[] = new int[states[i].getNumChild()];
 						children = states[i].getChildId();
 						
+//						for(int j = 0; j < children.length; j++) {
+//							if(children[j] == -1) {
+//								System.out.println("No Children");
+//								break;
+//							}
+//							else {
+//								System.out.println("children: " + children[j]);
+//							}
+//						}
 
-						
-
+						maxHeuristic = -90;
+						minHeuristic = 90;
 						for (int k = 0; k < children.length; k++) {
 							// MAX's turn
-							System.out.println("Heuristic k: " + states[k].getHeuristic());
+							//System.out.println("Heuristic k: " + states[k].getHeuristic());
 							//System.out.println("Heuristic child k: " + states[children[k]].getHeuristic());
 							if (currentDepth % 2 == 0) {
-								maxHeuristic = -90;
-								if (states[children[k]].getHeuristic() > maxHeuristic) {
-									maxHeuristic = states[children[k]].getHeuristic();
-									System.out.println("Max Heuristic: " + maxHeuristic);
-									states[i].setHeuristic(maxHeuristic);
-									//System.out.println("Heuristic B: " + states[k].getHeuristic());
+//								System.out.println("Parent: " + states[i].getId()); //debugging print
+//								System.out.println("Child Id: " + children[k]); //debugging print
+								if(children[k] != -1) {
+//									System.out.println("Checking Parent: " + states[children[k]].getParentId()); //debugging print
+//									System.out.println("Heuristic: " + states[children[k]].getHeuristic());
+									if (states[children[k]].getHeuristic() > maxHeuristic) {
+										maxHeuristic = states[children[k]].getHeuristic();
+										//System.out.println("Max Heuristic: " + maxHeuristic);
+										states[i].setHeuristic(maxHeuristic);
+										states[i].setNextBestMove(states[children[k]].getColumn());
+										//System.out.println("Heuristic B: " + states[k].getHeuristic());
+									}
 								}
 								
 							}
 							// MIN's turn
 							else {
-								minHeuristic = 90;
-								if (states[children[k]-1].getHeuristic() < minHeuristic) {
-									minHeuristic = states[children[k]-1].getHeuristic();
-									states[i].setHeuristic(minHeuristic);
+								if(children[k] != -1) {
+									if (states[children[k]].getHeuristic() < minHeuristic) {
+										minHeuristic = states[children[k]].getHeuristic();
+										states[i].setHeuristic(minHeuristic);
 
+									}
 								}
 							}
 						}
@@ -124,17 +145,22 @@ public class AI {
 			}
 		}
 
-		
-			System.out.println("Max Heuristic: " + maxHeuristic);
-			for (int h = 0; h < states[0].getChildId().length; h++) {
-				//System.out.println("children: " + children[h]);
-				//System.out.println("children state id: " + states[children[h]-1].getId());
-				if (states[states[0].getChildId()[h]].getHeuristic() == maxHeuristic) {
-					myMove = states[states[0].getChildId()[h]].getColumn();
-					System.out.println("myMove: " + myMove);
-				}
-			
-		}
+//		
+//			System.out.println("Max Heuristic: " + maxHeuristic);
+//			for (int h = 0; h < states[0].getChildId().length; h++) {
+//				//System.out.println("children: " + children[h]);
+//				//System.out.println("children state id: " + states[children[h]-1].getId());
+//				if (states[states[0].getChildId()[h]].getHeuristic() == maxHeuristic) {
+//					myMove = states[states[0].getChildId()[h]].getColumn();
+//					System.out.println("myMove: " + myMove);
+//				}
+//			}
+//		for(int i = 0; i < currentStates; i++) {
+//			System.out.println("State " + i + "'s heuristic: " + states[i].getHeuristic());
+//		}
+			myMove = states[0].getNextBestMove();
+			System.out.println("myMove: " + myMove);
+
 	}
 
 	public void evaluateState(ConnectFour connectFour, int currentDepth, int lastPlayer){

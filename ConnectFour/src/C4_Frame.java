@@ -22,6 +22,7 @@ public class C4_Frame
 	private static JFrame frame = new JFrame();
 	private static JButton[][] grid; 
 	private static Game game;
+	private final int GAMES = 5; // games x 2 (each player goes first equal times)
 
 	public C4_Frame(int row, int column)
 	{ 
@@ -167,7 +168,7 @@ public class C4_Frame
 				resetBoard();
 
 				/*** CREATE PLAYER ALGORITHM 2 ***/
-				p2 player2 = new p2();
+				AI player2 = new AI();
 
 				final int row = game.getConnectFour().getBoard()[0].length;
 				final int column = game.getConnectFour().getBoard().length;
@@ -176,7 +177,7 @@ public class C4_Frame
 				{
 					for(int i = 0; i < game.getConnectFour().getColumn(); i++)
 					{
-						final p2 player = player2;
+						final AI player = player2;
 						final int temp = i;
 						game.setCurrentPlayer(1);
 						grid[j][i].addMouseListener(new MouseAdapter()
@@ -215,14 +216,14 @@ public class C4_Frame
 
 				/*** CHANGE CLASS NAMES FOR PLAYERS ***/
 				p1 player1 = new p1();
-				p2 player2 = new p2();
+				AI player2 = new AI();
 				/**************************************/
 
 				// have name functions in individual classes, insert as parameters for constructor
 				int row = game.getConnectFour().getBoard()[0].length;
 				int column = game.getConnectFour().getBoard().length;
 
-				for(int i = 0; i < 50; i++)
+				for(int i = 0; i < GAMES; i++)
 				{
 
 					game.resetGame();
@@ -240,6 +241,7 @@ public class C4_Frame
 						// If player 1 wins, don't take player 2 turn
 						if(game.gameOutcome())
 						{
+							System.out.println("Winner: " + game.getWinner());
 							break;
 						}
 
@@ -250,7 +252,7 @@ public class C4_Frame
 					}
 				}
 
-				for(int i = 0; i < 50; i++)
+				for(int i = 0; i < GAMES; i++)
 				{
 
 					game.resetGame();
@@ -268,6 +270,7 @@ public class C4_Frame
 						// If player 1 wins, don't take player 2 turn
 						if(game.gameOutcome())
 						{
+							System.out.println("Winner: " + game.getWinner());
 							break;
 						}
 

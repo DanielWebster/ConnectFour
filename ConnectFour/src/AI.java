@@ -16,22 +16,8 @@ public class AI {
 	
 	public void checkWinningMove(int[][] b) {
 		c4.setBoard(b);
-		//		arrayIndices = new int[MAX_DEPTH+1];
-		//		for (int i = 1; i < MAX_DEPTH+1; i++) {
-		//			arrayIndices[i] = (int) Math.pow(7, i);
-		//		}
 
 		states = new State[50000000];
-
-		// Allocate the necessary space for each depth
-		//states[1] = new State[7];
-		//states[2] = new State[49];
-		//states[3] = new State[399];
-		//states[4] = new State[2800];
-
-		//		for (int i = 1; i < states.length; i++) {
-		//			System.out.println("length: " + states[i].length);
-		//		}
 
 		currentStates = 0;
 		id = 0;
@@ -55,23 +41,8 @@ public class AI {
 		//for (int currentDepth = MAX_DEPTH; currentDepth > 0; currentDepth--) {
 		// Initialize heuristic MAX/MIN
 
-		//System.out.println("currentDepth: " + currentDepth);
-
-		//			int start = 0;
-		//			if (currentDepth == 2) {
-		//				start = 7;
-		//			}
-		//			long startTime = System.nanoTime();
-
-
 		startTime = System.nanoTime();
 
-
-//		for (int i = 0; i < currentStates; i++) {
-//			//System.out.println("Parents: " + states[i].getParentId());
-//			//System.out.println("Id: " + states[i].getId());
-//			System.out.println("Id: " + states[i].getId() + " Depth: " + states[i].getDepth());
-//		}
 		for (int i = 0; i < currentStates; i++) {
 			//System.out.println("currentState Id: " + states[i].getId());
 			//System.out.println("currentState parentId: " + states[i].getParentId());
@@ -142,7 +113,6 @@ public class AI {
 									if (states[children[k]].getHeuristic() < minHeuristic) {
 										minHeuristic = states[children[k]].getHeuristic();
 										states[i].setHeuristic(minHeuristic);
-
 									}
 								}
 							}
@@ -152,19 +122,6 @@ public class AI {
 			}
 		}
 
-//		
-//			System.out.println("Max Heuristic: " + maxHeuristic);
-//			for (int h = 0; h < states[0].getChildId().length; h++) {
-//				//System.out.println("children: " + children[h]);
-//				//System.out.println("children state id: " + states[children[h]-1].getId());
-//				if (states[states[0].getChildId()[h]].getHeuristic() == maxHeuristic) {
-//					myMove = states[states[0].getChildId()[h]].getColumn();
-//					System.out.println("myMove: " + myMove);
-//				}
-//			}
-//		for(int i = 0; i < currentStates; i++) {
-//			System.out.println("State " + i + "'s heuristic: " + states[i].getHeuristic());
-//		}
 			//System.out.println("Best Heuristic: " + states[0].getHeuristic());
 			myMove = states[0].getNextBestMove();
 			//System.out.println("myMove: " + myMove);
@@ -186,13 +143,10 @@ public class AI {
 		//System.out.println("currentDepth: " + currentDepth);
 		//System.out.println("maxDepth: " + MAX_DEPTH);
 
-
 		if (currentDepth <= MAX_DEPTH) {
 			currentDepth++;
 			int parentId = id;
 			//System.out.println("currentStates: " + currentStates);
-
-
 			for (int i = 0; i < 7; i++) {
 				//System.out.println("i: "+ i);
 
@@ -205,11 +159,6 @@ public class AI {
 
 					int heuristic = new Heuristic_2().heuristic(newBoard[i].getBoard());
 					states[currentStates] = new State(i+1, heuristic, currentDepth-1, ++id, parentId);
-					//System.out.println("Heuristic for state[" + currentStates + "]: " + heuristic);
-					//					if(currentDepth <= MAX_DEPTH) {
-					//						//System.out.println("parentState: " + parentState);
-					//						states[parentId].addChild(id);
-					//					}
 					currentStates++;
 					evaluateState(newBoard[i], currentDepth, currentPlayer);
 				}
@@ -217,7 +166,6 @@ public class AI {
 
 		}
 		else {
-
 			//System.out.println("maxDepth reached");
 		}
 	}

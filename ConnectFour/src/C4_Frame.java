@@ -168,32 +168,39 @@ public class C4_Frame
 				resetBoard();
 
 				/*** CREATE PLAYER ALGORITHM 2 ***/
-				AI player2 = new AI();
+				final AI player2 = new AI();
 
 				final int row = game.getConnectFour().getBoard()[0].length;
 				final int column = game.getConnectFour().getBoard().length;
 
+				game.setCurrentPlayer(1);
+				game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
+				makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
+				// check for winner
+				manualDialogue();
+				
+				
 				for(int j = 0; j < game.getConnectFour().getRow(); j++)
 				{
 					for(int i = 0; i < game.getConnectFour().getColumn(); i++)
 					{
-						final AI player = player2;
+						//final AI player = player2;
 						final int temp = i;
-						game.setCurrentPlayer(1);
+						game.setCurrentPlayer(2);
 						grid[j][i].addMouseListener(new MouseAdapter()
 						{
 							@Override
 							public void mouseClicked(MouseEvent e)
 							{
-								game.setCurrentPlayer(1);
+								game.setCurrentPlayer(2);
 								game.getConnectFour().takeTurn(temp+1, game.getCurrentPlayer());
 								makeMove(game.getConnectFour().getXCoordinate(),game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
 								manualDialogue();
 							
 								
 								// Algorithm 1 takes turn
-								game.setCurrentPlayer(2);
-								game.getConnectFour().takeTurn(player.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
+								game.setCurrentPlayer(1);
+								game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
 								makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
 								// check for winner
 								manualDialogue();

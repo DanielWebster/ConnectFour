@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -299,7 +298,7 @@ public class C4_Frame
 				}
 				else if (a3.equals("Run Again"))
 				{
-					// too be implemented
+					// to be implemented
 				}
 
 				// don't forget to dispose of the dialog
@@ -324,6 +323,7 @@ public class C4_Frame
 		{
 			for(int j = 0; j < grid[0].length; j++)
 			{
+				//grid[i][j].removeMouseListener(l)
 				// Set all buttons to the color white
 				grid[i][j].setBackground(Color.WHITE);
 			}

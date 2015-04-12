@@ -7,8 +7,8 @@ public class AI {
 	private int currentStates;
 	private int id = 0;
 	private int myMove = -1;
-	private int maxHeuristic = -90;
-	private int minHeuristic = 90;
+	private int maxHeuristic;
+	private int minHeuristic;
 	String name = "AI";
 	ConnectFour c4 = new ConnectFour();
 
@@ -21,7 +21,7 @@ public class AI {
 		id = 0;
 
 		//System.out.println("CurrentStates: " + currentStates);
-		long startTime = System.nanoTime();
+		//long startTime = System.nanoTime();
 		// Initialize the top depth (column, heuristic, depth, id, parentId)
 		states[currentStates++] = new State(-1, 0, 0, 0, -1);
 		// Get the heuristics for each state of the game up to a set MAX_DEPTH

@@ -21,9 +21,11 @@ public class C4_Frame
 	private static JFrame frame = new JFrame();
 	private static JButton[][] grid; 
 	private static Game game;
-	private final int GAMES = 10; // games x 2 (each player goes first equal times)
+	private final int GAMES = 10; 
+	private int row = 6;
+	private int column = 7;
 
-	public C4_Frame(int row, int column)
+	public C4_Frame()
 	{ 
 		game = new Game();
 		JMenuBar menuBar = new JMenuBar();
@@ -35,17 +37,32 @@ public class C4_Frame
 		JMenu mnManual = new JMenu("Manual");
 		mnGameMode.add(mnManual);
 
-		JMenuItem mntmVsAlgorithm = new JMenuItem("vs. Algorithm 1");
-		mnManual.add(mntmVsAlgorithm);
+		JMenuItem mntmVsAI = new JMenuItem("vs. AI");
+		mnManual.add(mntmVsAI);
 
-		JMenuItem mntmVsAlgorithm_1 = new JMenuItem("vs. Algorithm 2");
-		mnManual.add(mntmVsAlgorithm_1);
+		JMenuItem mntmVsJacob = new JMenuItem("vs. Jacob");
+		mnManual.add(mntmVsJacob);
 
-		JMenuItem mntmVsPlayer = new JMenuItem("vs. Player");
+		JMenuItem mntmVsDan = new JMenuItem("vs. Dan");
+		mnManual.add(mntmVsDan);
+
+		JMenuItem mntmVsRandom = new JMenuItem("vs. Random");
+		mnManual.add(mntmVsRandom);
+
+		JMenuItem mntmVsPlayer = new JMenuItem("vs. Friend");
 		mnManual.add(mntmVsPlayer);
 
-		JMenuItem mntmAutomatic = new JMenuItem("Automatic");
-		mnGameMode.add(mntmAutomatic);
+		JMenu mnAutomatic = new JMenu("Automatic");
+		mnGameMode.add(mnAutomatic);
+
+		JMenuItem mntmAiVsJacob = new JMenuItem("AI vs. Jacob");
+		mnAutomatic.add(mntmAiVsJacob);
+
+		JMenuItem mntmAiVsDan = new JMenuItem("AI vs. Dan");
+		mnAutomatic.add(mntmAiVsDan);
+
+		JMenuItem mntmAiVsRandom = new JMenuItem("AI vs. Random");
+		mnAutomatic.add(mntmAiVsRandom);
 
 		//set layout
 		frame.getContentPane().setLayout(new GridLayout(row,column)); 
@@ -65,7 +82,61 @@ public class C4_Frame
 			}
 		}
 
-        /******************** PLAYER VS. PLAYER ********************/
+		/******************** PLAYER VS. AI ********************/
+		mntmVsAI.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{ 
+				/*** CLEAR BOARD ***/
+				game.resetGame();
+				resetBoard();
+
+				/*** CREATE PLAYER ALGORITHM AI ***/
+				final AI player2 = new AI();
+
+				final int row = game.getConnectFour().getBoard()[0].length;
+				final int column = game.getConnectFour().getBoard().length;
+
+				game.setCurrentPlayer(1);
+				game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
+				makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
+				// check for winner
+				manualDialogue();
+
+
+				for(int j = 0; j < game.getConnectFour().getRow(); j++)
+				{
+					for(int i = 0; i < game.getConnectFour().getColumn(); i++)
+					{
+						final int temp = i;
+						game.setCurrentPlayer(2);
+						grid[j][i].addMouseListener(new MouseAdapter()
+						{
+							@Override
+							public void mouseClicked(MouseEvent e)
+							{
+								game.setCurrentPlayer(2);
+								game.getConnectFour().takeTurn(temp+1, game.getCurrentPlayer());
+								makeMove(game.getConnectFour().getXCoordinate(),game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
+								manualDialogue();
+
+
+								// AI takes turn
+								game.setCurrentPlayer(1);
+								game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
+								makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
+								// check for winner
+								manualDialogue();
+
+							}
+						});
+					}
+				}
+			}
+		});
+		/**************************************************************/
+		
+		/******************** PLAYER VS. FRIEND ********************/
 		mntmVsPlayer.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
@@ -83,10 +154,10 @@ public class C4_Frame
 							{
 								game.getConnectFour().takeTurn(temp+1, game.getCurrentPlayer());
 								makeMove(game.getConnectFour().getXCoordinate(),game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
-								
+
 								// Print the board
 								game.getConnectFour().printBoard();
-								
+
 								// Print the heuristic
 								int heuristic = new Heuristic().heuristic(game.getConnectFour().getBoard());
 								System.out.println("Heuristic: " + heuristic);
@@ -108,8 +179,8 @@ public class C4_Frame
 		});
 		/**************************************************************/
 
-		/****** PLAYER VS. ALGORITHM 1 ********/
-		mntmVsAlgorithm.addActionListener(new ActionListener() 
+		/****** PLAYER VS. JACOB ********/
+		mntmVsJacob.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{ 
@@ -118,7 +189,7 @@ public class C4_Frame
 				resetBoard();
 
 				/*** CREATE PLAYER ALGORITHM 1 ***/
-				JacobAlgorithm player1 = new JacobAlgorithm();
+				final JacobAlgorithm player1 = new JacobAlgorithm();
 
 				final int row = game.getConnectFour().getBoard()[0].length;
 				final int column = game.getConnectFour().getBoard().length;
@@ -127,7 +198,6 @@ public class C4_Frame
 				{
 					for(int i = 0; i < game.getConnectFour().getColumn(); i++)
 					{
-						final JacobAlgorithm player = player1;
 						final int temp = i;
 						game.setCurrentPlayer(1);
 						grid[j][i].addMouseListener(new MouseAdapter()
@@ -140,10 +210,10 @@ public class C4_Frame
 								makeMove(game.getConnectFour().getXCoordinate(),game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
 
 								manualDialogue();
-							
+
 								// Algorithm 1 takes turn
 								game.setCurrentPlayer(2);
-								game.getConnectFour().takeTurn(player.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
+								game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
 								makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
 
 								// check for winner
@@ -155,10 +225,10 @@ public class C4_Frame
 				}
 			}
 		});
-		/**********************************************/
+		/**************************************************************/
 		
-			/****** PLAYER VS. ALGORITHM 2 ********/
-		mntmVsAlgorithm_1.addActionListener(new ActionListener() 
+		/****** PLAYER VS. DAN ********/
+		mntmVsDan.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{ 
@@ -166,41 +236,35 @@ public class C4_Frame
 				game.resetGame();
 				resetBoard();
 
-				/*** CREATE PLAYER ALGORITHM 2 ***/
-				final AI player2 = new AI();
+				/*** CREATE PLAYER ALGORITHM 1 ***/
+				final DanAlgorithm player1 = new DanAlgorithm();
 
 				final int row = game.getConnectFour().getBoard()[0].length;
 				final int column = game.getConnectFour().getBoard().length;
 
-				game.setCurrentPlayer(1);
-				game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
-				makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
-				// check for winner
-				manualDialogue();
-				
-				
 				for(int j = 0; j < game.getConnectFour().getRow(); j++)
 				{
 					for(int i = 0; i < game.getConnectFour().getColumn(); i++)
 					{
-						//final AI player = player2;
+						
 						final int temp = i;
-						game.setCurrentPlayer(2);
+						game.setCurrentPlayer(1);
 						grid[j][i].addMouseListener(new MouseAdapter()
 						{
 							@Override
 							public void mouseClicked(MouseEvent e)
 							{
-								game.setCurrentPlayer(2);
+								game.setCurrentPlayer(1);
 								game.getConnectFour().takeTurn(temp+1, game.getCurrentPlayer());
 								makeMove(game.getConnectFour().getXCoordinate(),game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
+
 								manualDialogue();
-							
-								
+
 								// Algorithm 1 takes turn
-								game.setCurrentPlayer(1);
-								game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
+								game.setCurrentPlayer(2);
+								game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
 								makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
+
 								// check for winner
 								manualDialogue();
 
@@ -210,10 +274,59 @@ public class C4_Frame
 				}
 			}
 		});
-		/**********************************************/
+		/**************************************************************/
+		
+		/****** PLAYER VS. RANDOM ********/
+		mntmVsRandom.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{ 
+				/*** CLEAR BOARD ***/
+				game.resetGame();
+				resetBoard();
 
-        /****** ALGORITHM 1 VS. ALGORITHM 2 ***********/
-		mntmAutomatic.addActionListener(new ActionListener() 
+				/*** CREATE PLAYER ALGORITHM 1 ***/
+				final RandomAlgorithm player1 = new RandomAlgorithm();
+
+				final int row = game.getConnectFour().getBoard()[0].length;
+				final int column = game.getConnectFour().getBoard().length;
+
+				for(int j = 0; j < game.getConnectFour().getRow(); j++)
+				{
+					for(int i = 0; i < game.getConnectFour().getColumn(); i++)
+					{
+						
+						final int temp = i;
+						game.setCurrentPlayer(1);
+						grid[j][i].addMouseListener(new MouseAdapter()
+						{
+							@Override
+							public void mouseClicked(MouseEvent e)
+							{
+								game.setCurrentPlayer(1);
+								game.getConnectFour().takeTurn(temp+1, game.getCurrentPlayer());
+								makeMove(game.getConnectFour().getXCoordinate(),game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
+
+								manualDialogue();
+
+								// Algorithm 1 takes turn
+								game.setCurrentPlayer(2);
+								game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), game.getCurrentPlayer());
+								makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
+
+								// check for winner
+								manualDialogue();
+
+							}
+						});
+					}
+				}
+			}
+		});
+		/**************************************************************/
+		
+		/******************** AI VS. JACOB ********************/
+		mntmAiVsJacob.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
@@ -267,9 +380,9 @@ public class C4_Frame
 						JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, options2, options2[0]);
 				JDialog dialog = jop.createDialog(null, "Title");
 				dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-				
+
 				dialog.setVisible(true);
-			
+
 				String a3 = (String) jop.getValue();
 				if (a3.equals("Exit Game")) 
 				{
@@ -285,7 +398,159 @@ public class C4_Frame
 
 			}
 		});
-		/******************************************************/
+		/**************************************************************/
+
+
+		/******************** AI VS. DAN ********************/
+		mntmAiVsDan.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				game.resetGame();
+				resetBoard();
+
+				/*** CHANGE CLASS NAMES FOR PLAYERS ***/
+				DanAlgorithm player1 = new DanAlgorithm();
+				AI player2 = new AI();
+				/**************************************/
+
+				// have name functions in individual classes, insert as parameters for constructor
+				int row = game.getConnectFour().getBoard()[0].length;
+				int column = game.getConnectFour().getBoard().length;
+
+
+				for(int i = 0; i < GAMES; i++)
+				{
+
+					game.resetGame();
+					resetBoard();
+
+					while(!game.gameOutcome())
+					{
+
+						// Player 2 takes turn
+						game.setCurrentPlayer(2);
+						game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), 2);
+						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 2);
+
+
+						// If player 1 wins, don't take player 2 turn
+						if(game.gameOutcome())
+						{
+							System.out.println("Winner: " + game.getWinner());
+							break;
+						}
+
+
+						// Player 1 takes turn
+						game.setCurrentPlayer(1);
+						game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), 1);
+						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 1);
+					}
+				}
+
+				Object [] options2 = {"Run Again", "Exit Game"};
+				JOptionPane jop = new JOptionPane(( player1.getName() + " (red) total wins: " + game.getP1Wins() + "\n"
+						+ player2.getName() + " (blue) total wins: " + game.getP2Wins() + "\n"
+						+"Total tie games: " + game.getTies() + "\n"),
+						JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, options2, options2[0]);
+				JDialog dialog = jop.createDialog(null, "Title");
+				dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+				dialog.setVisible(true);
+
+				String a3 = (String) jop.getValue();
+				if (a3.equals("Exit Game")) 
+				{
+					System.exit(0);
+				}
+				else if (a3.equals("Run Again"))
+				{
+					// to be implemented
+				}
+
+				// don't forget to dispose of the dialog
+				dialog.dispose();
+
+			}
+		});
+		/**************************************************************/
+
+		/******************** AI VS. RANDOM ********************/
+		mntmAiVsRandom.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				game.resetGame();
+				resetBoard();
+
+				/*** CHANGE CLASS NAMES FOR PLAYERS ***/
+				RandomAlgorithm player1 = new RandomAlgorithm();
+				AI player2 = new AI();
+				/**************************************/
+
+				// have name functions in individual classes, insert as parameters for constructor
+				int row = game.getConnectFour().getBoard()[0].length;
+				int column = game.getConnectFour().getBoard().length;
+
+
+				for(int i = 0; i < GAMES; i++)
+				{
+
+					game.resetGame();
+					resetBoard();
+
+					while(!game.gameOutcome())
+					{
+
+						// Player 2 takes turn
+						game.setCurrentPlayer(2);
+						game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), 2);
+						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 2);
+
+
+						// If player 1 wins, don't take player 2 turn
+						if(game.gameOutcome())
+						{
+							System.out.println("Winner: " + game.getWinner());
+							break;
+						}
+
+
+						// Player 1 takes turn
+						game.setCurrentPlayer(1);
+						game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), 1);
+						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 1);
+					}
+				}
+
+				Object [] options2 = {"Run Again", "Exit Game"};
+				JOptionPane jop = new JOptionPane(( player1.getName() + " (red) total wins: " + game.getP1Wins() + "\n"
+						+ player2.getName() + " (blue) total wins: " + game.getP2Wins() + "\n"
+						+"Total tie games: " + game.getTies() + "\n"),
+						JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, options2, options2[0]);
+				JDialog dialog = jop.createDialog(null, "Title");
+				dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+				dialog.setVisible(true);
+
+				String a3 = (String) jop.getValue();
+				if (a3.equals("Exit Game")) 
+				{
+					System.exit(0);
+				}
+				else if (a3.equals("Run Again"))
+				{
+					// to be implemented
+				}
+
+				// don't forget to dispose of the dialog
+				dialog.dispose();
+
+			}
+		});
+		/**************************************************************/
+
 
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -350,6 +615,6 @@ public class C4_Frame
 	}
 	public static void main(String[] args) 
 	{
-		new C4_Frame(6,7);
+		new C4_Frame();
 	}
 }

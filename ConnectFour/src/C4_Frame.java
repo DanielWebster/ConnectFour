@@ -21,7 +21,7 @@ public class C4_Frame
 	private static JFrame frame = new JFrame();
 	private static JButton[][] grid; 
 	private static Game game;
-	private final int GAMES = 5; // games x 2 (each player goes first equal times)
+	private final int GAMES = 10; // games x 2 (each player goes first equal times)
 
 	public C4_Frame(int row, int column)
 	{ 
@@ -118,7 +118,7 @@ public class C4_Frame
 				resetBoard();
 
 				/*** CREATE PLAYER ALGORITHM 1 ***/
-				p1 player1 = new p1();
+				JacobAlgorithm player1 = new JacobAlgorithm();
 
 				final int row = game.getConnectFour().getBoard()[0].length;
 				final int column = game.getConnectFour().getBoard().length;
@@ -127,7 +127,7 @@ public class C4_Frame
 				{
 					for(int i = 0; i < game.getConnectFour().getColumn(); i++)
 					{
-						final p1 player = player1;
+						final JacobAlgorithm player = player1;
 						final int temp = i;
 						game.setCurrentPlayer(1);
 						grid[j][i].addMouseListener(new MouseAdapter()
@@ -221,7 +221,7 @@ public class C4_Frame
 				resetBoard();
 
 				/*** CHANGE CLASS NAMES FOR PLAYERS ***/
-				p1 player1 = new p1();
+				JacobAlgorithm player1 = new JacobAlgorithm();
 				AI player2 = new AI();
 				/**************************************/
 
@@ -229,34 +229,6 @@ public class C4_Frame
 				int row = game.getConnectFour().getBoard()[0].length;
 				int column = game.getConnectFour().getBoard().length;
 
-				for(int i = 0; i < GAMES; i++)
-				{
-
-					game.resetGame();
-					resetBoard();
-
-					while(!game.gameOutcome())
-					{
-
-						// Player 1 takes turn
-						game.setCurrentPlayer(1);
-						game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), 1);
-						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 1);
-
-
-						// If player 1 wins, don't take player 2 turn
-						if(game.gameOutcome())
-						{
-							System.out.println("Winner: " + game.getWinner());
-							break;
-						}
-
-						// Player 2 takes turn
-						game.setCurrentPlayer(2);
-						game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), 2);
-						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 2);
-					}
-				}
 
 				for(int i = 0; i < GAMES; i++)
 				{
@@ -295,9 +267,9 @@ public class C4_Frame
 						JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, options2, options2[0]);
 				JDialog dialog = jop.createDialog(null, "Title");
 				dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-				// In real code, you should invoke this from AWT-EventQueue using invokeAndWait() or something
+				
 				dialog.setVisible(true);
-				// and would cast in a safe manner
+			
 				String a3 = (String) jop.getValue();
 				if (a3.equals("Exit Game")) 
 				{

@@ -1,6 +1,6 @@
 
 
-public class p1 {
+public class JacobAlgorithm {
 
 
 	private String name = "Jacob";
@@ -104,7 +104,7 @@ public class p1 {
 			myMove = (int)(Math.random()*3+3);
 		}
 
-		return myMove;
+		return -1;
 	}
 
 }

@@ -130,11 +130,13 @@ public class AI {
 					states[currentStates] = new State(i+1, heuristicNum, currentDepth-1, ++id, parentId);
 					
 					currentStates++;
+					// if the current outcome is a win, stop branching out searches
 					if (heuristic.getStopSearching()) {
 						break;
 					}
-					
-					evaluateState(newBoard[i], currentDepth, currentPlayer);
+					else {
+						evaluateState(newBoard[i], currentDepth, currentPlayer);
+					}
 				}
 			}
 

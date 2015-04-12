@@ -1,6 +1,6 @@
 
 
-public class p2 {
+public class DanAlgorithm {
 
 	private String name = "Simple Dan";
 	static int y = -1;

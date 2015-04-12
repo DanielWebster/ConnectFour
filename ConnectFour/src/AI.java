@@ -2,7 +2,7 @@
 
 public class AI {
 	//private ConnectFour[] connectFour;
-	private static final int MAX_DEPTH = 6;
+	private static final int MAX_DEPTH = 4;
 	private State[] states;
 	private int currentStates;
 	private int id = 0;
@@ -125,8 +125,8 @@ public class AI {
 
 					newBoard[i].makeTurn(connectFour.getBoard(), i+1, currentPlayer);
 
-					Heuristic_2 heuristic = new Heuristic_2();
-					int heuristicNum = new Heuristic_2().heuristic(newBoard[i].getBoard());
+					Heuristic heuristic = new Heuristic();
+					int heuristicNum = new Heuristic().heuristic(newBoard[i].getBoard());
 					states[currentStates] = new State(i+1, heuristicNum, currentDepth-1, ++id, parentId);
 					
 					currentStates++;

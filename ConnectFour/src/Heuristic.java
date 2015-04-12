@@ -12,6 +12,10 @@ public class Heuristic {
 	private int diagonals[][][] = new int[12][6][2]; // 12 = number of diagonals; 6 = max coordinate positions; 2 = xy coordinates
 	private int heuristic;
 	private int board[][];
+	private final int COUNT2 = 4;
+	private final int COUNT3 = 9;
+	private final int COUNT4 = 500;
+	private boolean stopSearching = false;
 	
 	public int heuristic(int board[][]) {
 
@@ -40,19 +44,37 @@ public class Heuristic {
 	
 	public int calculateWinningRows(int player) {
 		int winningRows = 0;
-		int countEmptyOrPlayer = 0;
+		int countPlayer = 0;
+		int countEmpty = 0;
 		
 		for(int j = 0; j < board[0].length; j++) {
-			countEmptyOrPlayer = 0;
+			countEmpty = 0;
+			countPlayer = 0;
 			for( int i = 0; i < board.length; i++) {
-				if(board[i][j] == player || board[i][j] == 0) {
-					countEmptyOrPlayer++;
+				if(board[i][j] == player) {
+					countPlayer++;
+				}
+				else if(board[i][j] == 0) {
+					countEmpty++;
 				}
 				else {
-					countEmptyOrPlayer = 0;
+					countEmpty = 0;
+					countPlayer = 0;
 				}
-				if(countEmptyOrPlayer == 4) {
-					winningRows++;
+				if((countEmpty+countPlayer) == 4) {
+					if(countPlayer == 2) {
+						winningRows+=COUNT2;
+					}
+					else if(countPlayer == 3) {
+						winningRows+=COUNT3;
+					}
+					else if(countPlayer == 4) {
+						winningRows+=COUNT4;
+						stopSearching = true;
+					}
+					else {
+						winningRows++;
+					}
 					break;
 				}
 			}
@@ -63,20 +85,38 @@ public class Heuristic {
 	
 	public int calculateWinningColumns(int player) {
 		int winningColumns = 0;
-		int countEmptyOrPlayer = 0;
+		int countEmpty = 0;
+		int countPlayer = 0;
 		
 		for(int i = 0; i < board.length; i++) {
+			countEmpty = 0;
+			countPlayer = 0;
 			for(int j = 0; j < board[0].length; j++) {
-				if(board[i][j] == 0 || board[i][j] == player) {
-					countEmptyOrPlayer++;
+				if(board[i][j] == 0) {
+					countEmpty++;
+				} 
+				else if (board[i][j] == player) {
+					countPlayer++;
 				}
 				else {
-					countEmptyOrPlayer = 0;
+					countEmpty = 0;
+					countPlayer = 0;
 				}
 					
-				if(countEmptyOrPlayer == 4) {
-					winningColumns++;
-					countEmptyOrPlayer = 0;
+				if((countEmpty+countPlayer) == 4) {
+					if(countPlayer == 2) {
+						winningColumns+=COUNT2;
+					}
+					else if(countPlayer == 3) {
+						winningColumns+=COUNT3;
+					}
+					else if(countPlayer == 4) {
+						winningColumns+=COUNT4;
+						stopSearching = true;
+					}
+					else {
+						winningColumns++;
+					}
 					break;
 				}
 			}
@@ -177,26 +217,44 @@ public class Heuristic {
 	
 	public int calculateWinningDiagonals(int player) {
 		int winningDiagonals = 0;
-		int countEmptyOrPlayer = 0;
+		int countEmpty = 0;
+		int countPlayer = 0;
 		int row, column;
 		
 		for(int i = 0; i < diagonals.length; i++) {
+			countEmpty = 0;
+			countPlayer = 0;
 			for(int j = 0; j < diagonals[0].length; j++) {
 				row = diagonals[i][j][0];
 				column = diagonals[i][j][1];
 				if(row != -1 && column != -1) {
-					if(board[row][column] == 0 || board[row][column] == player) {
-						countEmptyOrPlayer++;
+					if(board[row][column] == 0) {
+						countEmpty++;
 						//System.out.println("row: " + row + " column: " + column);
 						//System.out.println("player: " + player + " value: " + board[row][column]);
 					}
+					else if(board[row][column] == player) {
+						countPlayer++;
+					}
 					else {
-						countEmptyOrPlayer = 0;
+						countEmpty = 0;
+						countPlayer = 0;
 					}
 						
-					if(countEmptyOrPlayer == 4) {
-						winningDiagonals++;
-						countEmptyOrPlayer = 0;
+					if((countEmpty+countPlayer) == 4) {
+						if(countPlayer == 2) {
+							winningDiagonals+=COUNT2;
+						}
+						else if(countPlayer == 3) {
+							winningDiagonals+=COUNT3;
+						}
+						else if(countPlayer == 4) {
+							winningDiagonals+=COUNT4;
+							stopSearching = true;
+						}
+						else {
+							winningDiagonals++;
+						}
 						break;
 					}
 				}
@@ -204,6 +262,10 @@ public class Heuristic {
 		}
 		
 		return winningDiagonals;
+	}
+	
+	public boolean getStopSearching() {
+		return stopSearching;
 	}
 	
 	

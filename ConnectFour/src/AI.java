@@ -2,7 +2,7 @@
 
 public class AI {
 	//private ConnectFour[] connectFour;
-	private static final int MAX_DEPTH = 4;
+	private static final int MAX_DEPTH = 5;
 	private State[] states;
 	private int currentStates;
 	private int id = 0;
@@ -11,7 +11,7 @@ public class AI {
 	private int minHeuristic = 90;
 	String name = "AI";
 	ConnectFour c4 = new ConnectFour();
-	
+
 	public void checkWinningMove(int[][] b) {
 		c4.setBoard(b);
 
@@ -19,8 +19,6 @@ public class AI {
 
 		currentStates = 0;
 		id = 0;
-		//c4 = new ConnectFour();
-		//setBoard(c4);
 
 		//System.out.println("CurrentStates: " + currentStates);
 		long startTime = System.nanoTime();
@@ -30,88 +28,62 @@ public class AI {
 		evaluateState(c4, 1, 2);
 
 		//System.out.println("totalStates: " + currentStates);
-
-		long estimatedTime = System.nanoTime() - startTime;
-		long timeElapsedInSeconds = (long) (estimatedTime / (Math.pow(10, 9)));
+		//long estimatedTime = System.nanoTime() - startTime;
 		//System.out.println("Time taken: " + timeElapsedInSeconds + " seconds");
+		//startTime = System.nanoTime();
 
-		// Apply the minimax algorithm based on the heuristics of the states
-		//for (int currentDepth = MAX_DEPTH; currentDepth > 0; currentDepth--) {
-		// Initialize heuristic MAX/MIN
-
-		startTime = System.nanoTime();
-
+		// Adding the children to each of the states
 		for (int i = 0; i < currentStates; i++) {
-			//System.out.println("currentState Id: " + states[i].getId());
-			//System.out.println("currentState parentId: " + states[i].getParentId());
 			for (int j = 0; j < currentStates; j++) {
 				if (states[i].getId() == states[j].getParentId()) {
 					states[i].addChild(states[j].getId());
-					//System.out.println("child of [" + states[j].getId() + "]: " + states[i].getId());
 				}
 			}
 		}
-		
-		estimatedTime = System.nanoTime() - startTime;
-		timeElapsedInSeconds = (long) (estimatedTime / (Math.pow(10, 9)));
-		//System.out.println("Time taken for 2 loops: " + timeElapsedInSeconds + " seconds");
+//		estimatedTime = System.nanoTime() - startTime;
+//		long timeElapsedInSeconds = (long) (estimatedTime / (Math.pow(10, 9)));
+//		System.out.println("Time taken for 2 loops: " + timeElapsedInSeconds + " seconds");
 
-//		for ( int i = 0; i < currentStates; i++) {
-//			System.out.println("Heuristics " + i + " : " + states[i].getHeuristic());
-//		}
+
+		// Apply the minimax algorithm based on the heuristics of the states
 		for(int currentDepth = MAX_DEPTH; currentDepth >= 0; currentDepth--) {
-			//System.out.println("CurrentStates: " + currentStates);
+			
+			// Loop through all of the states and compare for max and min heuristic
 			for(int i = 0; i < currentStates; i++) {
-				if (states[i].getDepth() == currentDepth) {
-//					System.out.println("State Depth: " + states[i].getDepth() + " currentDepth: " + currentDepth);
-//					System.out.println("Id: " + states[i].getId() + " i: " + i);
-					if (states[i].getDepth() == currentDepth) {
-						//System.out.println("currentDepth: " + currentDepth);
-						//states[i].printChildren();
-						
-						int children[] = new int[states[i].getNumChild()];
-						children = states[i].getChildId();
-						
-//						for(int j = 0; j < children.length; j++) {
-//							if(children[j] == -1) {
-//								System.out.println("No Children");
-//								break;
-//							}
-//							else {
-//								System.out.println("children: " + children[j]);
-//							}
-//						}
 
-						maxHeuristic = -90;
-						minHeuristic = 90;
-						for (int k = 0; k < children.length; k++) {
+				// Check if the state is on the current depth
+				if (states[i].getDepth() == currentDepth) {
+
+					int children[] = new int[states[i].getNumChild()];
+					children = states[i].getChildId();
+
+					// Reset the MAX and MIN heuristic
+					maxHeuristic = -90;
+					minHeuristic = 90;
+					
+					// Loop through all of the children of the given state
+					for (int k = 0; k < children.length; k++) {
+
+						// The node must have children, -1 indicates children does not exist
+						if(children[k] != -1) {
+
 							// MAX's turn
-							//System.out.println("Heuristic k: " + states[k].getHeuristic());
-							//System.out.println("Heuristic child k: " + states[children[k]].getHeuristic());
 							if (currentDepth % 2 == 0) {
-//								System.out.println("Parent: " + states[i].getId()); //debugging print
-//								System.out.println("Child Id: " + children[k]); //debugging print
-								if(children[k] != -1) {
-//									System.out.println("Checking Parent: " + states[children[k]].getParentId()); //debugging print
-//									System.out.println("Heuristic: " + states[children[k]].getHeuristic());
-									if (states[children[k]].getHeuristic() > maxHeuristic) {
-										maxHeuristic = states[children[k]].getHeuristic();
-										//System.out.println("Max Heuristic: " + maxHeuristic);
-										states[i].setHeuristic(maxHeuristic);
-										states[i].setNextBestMove(states[children[k]].getColumn());
-										//System.out.println("Heuristic B: " + states[k].getHeuristic());
-									}
+
+								// If this nodes heuristic is greater than MAX, then assign it the MAX
+								if (states[children[k]].getHeuristic() > maxHeuristic) {
+									maxHeuristic = states[children[k]].getHeuristic();
+									states[i].setHeuristic(maxHeuristic);
+									states[i].setNextBestMove(states[children[k]].getColumn());
 								}
-								
 							}
+
 							// MIN's turn
 							else {
-								if(children[k] != -1) {
-									//System.out.println("Children: " + children[k] + " k: " + k);
-									if (states[children[k]].getHeuristic() < minHeuristic) {
-										minHeuristic = states[children[k]].getHeuristic();
-										states[i].setHeuristic(minHeuristic);
-									}
+								// If this nodes heuristic is less than MIN, then assign it the MIN
+								if (states[children[k]].getHeuristic() < minHeuristic) {
+									minHeuristic = states[children[k]].getHeuristic();
+									states[i].setHeuristic(minHeuristic);
 								}
 							}
 						}
@@ -120,10 +92,8 @@ public class AI {
 			}
 		}
 
-			//System.out.println("Best Heuristic: " + states[0].getHeuristic());
-			myMove = states[0].getNextBestMove();
-			//System.out.println("myMove: " + myMove);
-
+		myMove = states[0].getNextBestMove();
+		//System.out.println("myMove: " + myMove);
 	}
 
 	public void evaluateState(ConnectFour connectFour, int currentDepth, int lastPlayer){
@@ -168,16 +138,16 @@ public class AI {
 		}
 	}
 
-	
+
 	public static void main(String[] args) {
 		//AI ai = new AI();
 	}
-	
+
 	public int run(int b[][], int c, int r) {
 		checkWinningMove(b);
 		return myMove;
 	}
-	
+
 	public String getName()
 	{
 		return name;

@@ -1,6 +1,6 @@
 
 
-public class JacobAlgorithm {
+public class JacobAlgorithm extends ParentAlgorithm {
 
 
 	private String name = "Jacob";

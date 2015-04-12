@@ -1,6 +1,6 @@
 
 
-public class DanAlgorithm {
+public class DanAlgorithm extends ParentAlgorithm {
 
 	private String name = "Simple Dan";
 	static int y = -1;

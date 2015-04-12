@@ -1,6 +1,6 @@
 
 
-public class AI {
+public class AI extends ParentAlgorithm {
 	//private ConnectFour[] connectFour;
 	private static final int MAX_DEPTH = 4;
 	private State[] states;

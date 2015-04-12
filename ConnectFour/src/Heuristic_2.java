@@ -15,6 +15,7 @@ public class Heuristic_2 {
 	private final int COUNT2 = 4;
 	private final int COUNT3 = 9;
 	private final int COUNT4 = 500;
+	private boolean stopSearching = false;
 	
 	public int heuristic(int board[][]) {
 
@@ -69,6 +70,7 @@ public class Heuristic_2 {
 					}
 					else if(countPlayer == 4) {
 						winningRows+=COUNT4;
+						stopSearching = true;
 					}
 					else {
 						winningRows++;
@@ -110,6 +112,7 @@ public class Heuristic_2 {
 					}
 					else if(countPlayer == 4) {
 						winningColumns+=COUNT4;
+						stopSearching = true;
 					}
 					else {
 						winningColumns++;
@@ -247,6 +250,7 @@ public class Heuristic_2 {
 						}
 						else if(countPlayer == 4) {
 							winningDiagonals+=COUNT4;
+							stopSearching = true;
 						}
 						else {
 							winningDiagonals++;
@@ -258,6 +262,10 @@ public class Heuristic_2 {
 		}
 		
 		return winningDiagonals;
+	}
+	
+	public boolean getStopSearching() {
+		return stopSearching;
 	}
 	
 	

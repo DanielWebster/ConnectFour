@@ -6,9 +6,7 @@ public class AI {
 	private State[] states;
 	private int currentStates;
 	private int id = 0;
-	private int p1 = 1;
 	private int myMove = -1;
-	private int arrayIndices[];
 	private int maxHeuristic = -90;
 	private int minHeuristic = 90;
 	String name = "AI";

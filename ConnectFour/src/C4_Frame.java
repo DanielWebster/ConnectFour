@@ -106,6 +106,8 @@ public class C4_Frame
 				/*** CLEAR BOARD ***/
 				game.resetGame();
 				resetBoard();
+				
+				game.setNames("Player1", "JacobAlgorithm");
 
 				playerVs("Jacob");
 			}
@@ -120,6 +122,8 @@ public class C4_Frame
 				/*** CLEAR BOARD ***/
 				game.resetGame();
 				resetBoard();
+				
+				game.setNames("Player1", "DanAlgorithm");
 
 				playerVs("Dan");
 			}
@@ -134,6 +138,8 @@ public class C4_Frame
 				/*** CLEAR BOARD ***/
 				game.resetGame();
 				resetBoard();
+				
+				game.setNames("Player1", "RandomAlgorithm");
 
 				playerVs("Random");
 			}
@@ -191,70 +197,8 @@ public class C4_Frame
 			{
 				game.resetGame();
 				resetBoard();
-
-				/*** CHANGE CLASS NAMES FOR PLAYERS ***/
-				JacobAlgorithm player1 = new JacobAlgorithm();
-				AI player2 = new AI();
-				/**************************************/
-
-				// have name functions in individual classes, insert as parameters for constructor
-				int row = game.getConnectFour().getBoard()[0].length;
-				int column = game.getConnectFour().getBoard().length;
-
-
-				for(int i = 0; i < GAMES; i++)
-				{
-
-					game.resetGame();
-					resetBoard();
-
-					while(!game.gameOutcome())
-					{
-
-						// Player 2 takes turn
-						game.setCurrentPlayer(2);
-						game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), 2);
-						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 2);
-
-
-						// If player 1 wins, don't take player 2 turn
-						if(game.gameOutcome())
-						{
-							System.out.println("Winner: " + game.getWinner());
-							break;
-						}
-
-
-						// Player 1 takes turn
-						game.setCurrentPlayer(1);
-						game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), 1);
-						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 1);
-					}
-				}
-
-				Object [] options2 = {"Run Again", "Exit Game"};
-				JOptionPane jop = new JOptionPane(( player1.getName() + " (red) total wins: " + game.getP1Wins() + "\n"
-						+ player2.getName() + " (blue) total wins: " + game.getP2Wins() + "\n"
-						+"Total tie games: " + game.getTies() + "\n"),
-						JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, options2, options2[0]);
-				JDialog dialog = jop.createDialog(null, "Title");
-				dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-				dialog.setVisible(true);
-
-				String a3 = (String) jop.getValue();
-				if (a3.equals("Exit Game")) 
-				{
-					System.exit(0);
-				}
-				else if (a3.equals("Run Again"))
-				{
-					// to be implemented
-				}
-
-				// don't forget to dispose of the dialog
-				dialog.dispose();
-
+				game.setNames("AI", "JacobAlgorithm");
+				automaticVs("AI","Jacob");
 			}
 		});
 		/**************************************************************/
@@ -267,70 +211,8 @@ public class C4_Frame
 			{
 				game.resetGame();
 				resetBoard();
-
-				/*** CHANGE CLASS NAMES FOR PLAYERS ***/
-				DanAlgorithm player1 = new DanAlgorithm();
-				AI player2 = new AI();
-				/**************************************/
-
-				// have name functions in individual classes, insert as parameters for constructor
-				int row = game.getConnectFour().getBoard()[0].length;
-				int column = game.getConnectFour().getBoard().length;
-
-
-				for(int i = 0; i < GAMES; i++)
-				{
-
-					game.resetGame();
-					resetBoard();
-
-					while(!game.gameOutcome())
-					{
-
-						// Player 2 takes turn
-						game.setCurrentPlayer(2);
-						game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), 2);
-						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 2);
-
-
-						// If player 1 wins, don't take player 2 turn
-						if(game.gameOutcome())
-						{
-							System.out.println("Winner: " + game.getWinner());
-							break;
-						}
-
-
-						// Player 1 takes turn
-						game.setCurrentPlayer(1);
-						game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), 1);
-						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 1);
-					}
-				}
-
-				Object [] options2 = {"Run Again", "Exit Game"};
-				JOptionPane jop = new JOptionPane(( player1.getName() + " (red) total wins: " + game.getP1Wins() + "\n"
-						+ player2.getName() + " (blue) total wins: " + game.getP2Wins() + "\n"
-						+"Total tie games: " + game.getTies() + "\n"),
-						JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, options2, options2[0]);
-				JDialog dialog = jop.createDialog(null, "Title");
-				dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-				dialog.setVisible(true);
-
-				String a3 = (String) jop.getValue();
-				if (a3.equals("Exit Game")) 
-				{
-					System.exit(0);
-				}
-				else if (a3.equals("Run Again"))
-				{
-					// to be implemented
-				}
-
-				// don't forget to dispose of the dialog
-				dialog.dispose();
-
+				game.setNames("AI", "DanAlgorithm");
+				automaticVs("AI","Dan");
 			}
 		});
 		/**************************************************************/
@@ -342,70 +224,8 @@ public class C4_Frame
 			{
 				game.resetGame();
 				resetBoard();
-
-				/*** CHANGE CLASS NAMES FOR PLAYERS ***/
-				RandomAlgorithm player1 = new RandomAlgorithm();
-				AI player2 = new AI();
-				/**************************************/
-
-				// have name functions in individual classes, insert as parameters for constructor
-				int row = game.getConnectFour().getBoard()[0].length;
-				int column = game.getConnectFour().getBoard().length;
-
-
-				for(int i = 0; i < GAMES; i++)
-				{
-
-					game.resetGame();
-					resetBoard();
-
-					while(!game.gameOutcome())
-					{
-
-						// Player 2 takes turn
-						game.setCurrentPlayer(2);
-						game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), 2);
-						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 2);
-
-
-						// If player 1 wins, don't take player 2 turn
-						if(game.gameOutcome())
-						{
-							System.out.println("Winner: " + game.getWinner());
-							break;
-						}
-
-
-						// Player 1 takes turn
-						game.setCurrentPlayer(1);
-						game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), 1);
-						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 1);
-					}
-				}
-
-				Object [] options2 = {"Run Again", "Exit Game"};
-				JOptionPane jop = new JOptionPane(( player1.getName() + " (red) total wins: " + game.getP1Wins() + "\n"
-						+ player2.getName() + " (blue) total wins: " + game.getP2Wins() + "\n"
-						+"Total tie games: " + game.getTies() + "\n"),
-						JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, options2, options2[0]);
-				JDialog dialog = jop.createDialog(null, "Title");
-				dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-				dialog.setVisible(true);
-
-				String a3 = (String) jop.getValue();
-				if (a3.equals("Exit Game")) 
-				{
-					System.exit(0);
-				}
-				else if (a3.equals("Run Again"))
-				{
-					// to be implemented
-				}
-
-				// don't forget to dispose of the dialog
-				dialog.dispose();
-
+				game.setNames("AI", "RandomAlgorithm");
+				automaticVs("AI","Random");
 			}
 		});
 		/**************************************************************/
@@ -419,25 +239,31 @@ public class C4_Frame
 		// Makes frame visible
 		frame.setVisible(true); 
 	}
-
-	public void playerVs(String opponent) {
+	
+	public ParentAlgorithm setAlgorithm(String player) {
 		ParentAlgorithm players = null;
-
+		
 		/*** CREATE THE CORRESPONDING ALGORITHM FOR MANUAL ***/
-		if (opponent.equals("AI")) {
+		if (player.equals("AI")) {
 			players = new AI();
 		}
-		else if (opponent.equals("Jacob")) {
+		else if (player.equals("Jacob")) {
 			players = new JacobAlgorithm();
 		}
-		else if (opponent.equals("Dan")) {
+		else if (player.equals("Dan")) {
 			players = new DanAlgorithm();
 		}
-		else if (opponent.equals("Random")) {
+		else if (player.equals("Random")) {
 			players = new RandomAlgorithm();
 		}
-
+		
 		final ParentAlgorithm player2 = players;
+		
+		return player2;
+	}
+
+	public void playerVs(String opponent) {
+		final ParentAlgorithm player2 = setAlgorithm(opponent);
 
 		final int row = game.getConnectFour().getBoard()[0].length;
 		final int column = game.getConnectFour().getBoard().length;
@@ -447,7 +273,6 @@ public class C4_Frame
 		makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
 		// check for winner
 		manualDialogue();
-
 
 		for(int j = 0; j < game.getConnectFour().getRow(); j++)
 		{
@@ -472,11 +297,75 @@ public class C4_Frame
 						makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), game.getCurrentPlayer());
 						// check for winner
 						manualDialogue();
-
 					}
 				});
 			}
 		}
+	}
+	
+	public void automaticVs(String p1, String p2) {
+		
+		final ParentAlgorithm player1 = setAlgorithm(p1);
+		final ParentAlgorithm player2 = setAlgorithm(p2);
+
+		// have name functions in individual classes, insert as parameters for constructor
+		int row = game.getConnectFour().getBoard()[0].length;
+		int column = game.getConnectFour().getBoard().length;
+
+		for(int i = 0; i < GAMES; i++)
+		{
+			game.resetGame();
+			resetBoard();
+
+			while(!game.gameOutcome())
+			{
+				// Player 2 takes turn
+				game.setCurrentPlayer(2);
+				game.getConnectFour().takeTurn(player2.run(game.getConnectFour().getBoard(), row, column), 2);
+				makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 2);
+
+				// If player 1 wins, don't take player 2 turn
+				if(game.gameOutcome())
+				{
+					System.out.println("Winner: " + game.getWinner());
+					break;
+				}
+
+				// Player 1 takes turn
+				game.setCurrentPlayer(1);
+				game.getConnectFour().takeTurn(player1.run(game.getConnectFour().getBoard(), row, column), 1);
+				makeMove(game.getConnectFour().getXCoordinate(), game.getConnectFour().getYCoordinate(), 1);
+				
+				if(game.gameOutcome())
+				{
+					System.out.println("Winner: " + game.getWinner());
+					break;
+				}
+			}
+		}
+
+		Object [] options2 = {"Run Again", "Exit Game"};
+		JOptionPane jop = new JOptionPane(( player1.getName() + " (red) total wins: " + game.getP1Wins() + "\n"
+				+ player2.getName() + " (blue) total wins: " + game.getP2Wins() + "\n"
+				+"Total tie games: " + game.getTies() + "\n"),
+				JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, options2, options2[0]);
+		JDialog dialog = jop.createDialog(null, "Title");
+		dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+		dialog.setVisible(true);
+
+		String a3 = (String) jop.getValue();
+		if (a3.equals("Exit Game")) 
+		{
+			System.exit(0);
+		}
+		else if (a3.equals("Run Again"))
+		{
+			game.resetStats();
+		}
+
+		// don't forget to dispose of the dialog
+		dialog.dispose();
 	}
 
 	public void resetBoard()

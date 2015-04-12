@@ -1,6 +1,3 @@
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Scanner;
 
 public class Game
 {
@@ -9,12 +6,10 @@ public class Game
 	private String p2name;
 	private int currentPlayer;
 	private	boolean gameOver;
-	private	int retCol; //re
 	private	String winner;
 	private	int p1Wins;
 	private	int p2Wins;
 	private	int ties; 
-	private PrintWriter writer;
 	private ConnectFour connectFour;
 	
 	public Game()
@@ -27,12 +22,17 @@ public class Game
 		p1Wins = 0;
 		p2Wins = 0;
 		ties = 0; 
-	    writer = null;
 	}
 	
 	public String getWinner()
 	{
 		return winner;
+	}
+	
+	public void resetStats() {
+		p1Wins = 0;
+		p2Wins = 0;
+		ties = 0;
 	}
 	
 	public void resetGame()
@@ -99,6 +99,11 @@ public class Game
 	public int getTies()
 	{
 		return ties;
+	}
+	
+	public void setNames(String p1, String p2) {
+		p1name = p1;
+		p2name = p2;
 	}
 
 }
